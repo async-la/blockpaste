@@ -1,0 +1,75 @@
+/*
+// Examples Stylesheet
+// -------------------
+*/
+
+html, body {
+    height: 100% !important;
+}
+
+body {
+	font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+	font-size: 14px;
+	color: #333;
+	margin: 0;
+	padding: 0;
+}
+
+.app-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	height: 45px;
+	margin-right: 1em;
+}
+
+.app-header-left {
+	display: flex;
+	padding-left: 1em;
+}
+
+.app-header-right {
+	display: flex;
+	padding-right: 1em;
+}
+
+.app-content {
+	display: flex;
+	justify-content: flex-start;
+}
+
+.app-sidebar {
+	display: flex;
+	flex-direction: column;
+	width: 200px;
+	border: 1px solid #ccc;
+	text-align: center;
+	padding: 1em 0;
+	line-height: 2em;
+}
+
+.app-main {
+	width: 100%;
+}
+
+button {
+	margin: 0 0.5em;
+}
+
+.ReactCodeMirror {
+	width: 100%;
+	border: 1px solid #ccc;
+}
+
+.CodeMirror-scroll {
+	height: 100%;
+}
+
+iframe {
+	outline: none;
+	border: 1px solid #ccc;
+	bottom: 0;
+	position: relative;
+	width: 100%;
+}
