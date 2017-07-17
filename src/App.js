@@ -23,7 +23,7 @@ const key = 'hR&$yc=oJHXRN?Yo/^fqPtShjnXPF4ehd1?!O}6t#{jnzq7MsWlDX,,bfh_bvX_'
 class App extends Component {
   state = {
     loading: false,
-		readOnly: false,
+    readOnly: false,
     html: defaults.html,
     css: defaults.css,
     js: defaults.js,
@@ -85,16 +85,6 @@ class App extends Component {
 
     this.uploadToSwarm(ciphertext.toString())
   }
-
-  downloadInnerHtml() {
-    const elHtml = document.getElementById("code").innerHTML;
-    const link = document.createElement('a');
-
-    link.setAttribute('download', 'particle.html');
-    link.setAttribute('href', 'data:' + 'text/html' + ';charset=utf-8,' + encodeURIComponent(elHtml));
-    link.click();
-}
-
 
   getData = (hash) => {
     this.setState({ loading: true })
