@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+import BigNumber from 'bignumber.js'
 import CryptoJS from 'crypto-js'
 import Codemirror from 'react-codemirror'
 import Web3 from 'web3'
@@ -34,6 +35,7 @@ class App extends Component {
 
     // Set web3 as global so it can be access via debugger
     window.web3 = web3
+    window.BigNumber = BigNumber
 
     if (window.location.pathname.split( '/' )[1]) {
       this.getData(window.location.pathname.split( '/' )[1])
@@ -49,6 +51,7 @@ class App extends Component {
 
     // Set web3 so it can be used with `console.log()` in js snippets
     code.writeln(`<script>window.web3 = window.parent.web3</script>`);
+    code.writeln(`<script>window.BigNumber = window.parent.BigNumber</script>`);
     code.writeln(`<style>${this._cssTextArea.textareaNode.innerText}</style>`)
     code.writeln(`<script>${this._jsTextArea.textareaNode.innerText}</script>`);
     code.close();
@@ -146,7 +149,7 @@ class App extends Component {
         <div className="app-content">
           <div className="app-sidebar">
             <a href="/6979bf11efedf6b8d40912ee8679bec79f4610fe565bd418a2ac1bed5ebc555f">Readme</a>
-            <a href="/6c1e9314d927c35eb0759aed24e95695cd5fa2d4d4116620a1fb3b252e8cc79e">Examples</a>
+            <a href="/0e84c4ed8f22fbb859f4ec4580a1fa731a881940f42e6af1c871a58a746556c3">Examples</a>
           </div>
 
 
