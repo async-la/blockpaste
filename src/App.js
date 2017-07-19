@@ -148,7 +148,7 @@ class App extends Component {
 
         <div className="app-content">
           <div className="app-sidebar">
-            <a href="/6979bf11efedf6b8d40912ee8679bec79f4610fe565bd418a2ac1bed5ebc555f">Readme</a>
+            <a href="/b3ecdff9f883d3e98013bebfa364c2a01e62785396464e9e5a8b9cce656dc661">Readme</a>
             <a href="/0e84c4ed8f22fbb859f4ec4580a1fa731a881940f42e6af1c871a58a746556c3">Examples</a>
           </div>
 
