@@ -51,8 +51,8 @@
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
-    "ssh": "ssh -i ./eth-sandbox.pem ubuntu@ec2-34-209-48-113.us-west-2.compute.amazonaws.com",
-    "deploy": "rsync -rave 'ssh -i eth-sandbox.pem' ./* ubuntu@ec2-34-209-48-113.us-west-2.compute.amazonaws.com:/var/www/eth-sandbox"
+    "ssh": "ssh -i ./eth-sandbox.pem ubuntu@ec2-54-202-98-235.us-west-2.compute.amazonaws.com",
+    "deploy": "rsync -rave 'ssh -i eth-sandbox.pem' ./* ubuntu@ec2-54-202-98-235.us-west-2.compute.amazonaws.com:/var/www/eth-sandbox"
   },
   "jest": {
     "collectCoverageFrom": [
@@ -93,5 +93,8 @@
   },
   "eslintConfig": {
     "extends": "react-app"
+  },
+  "devDependencies": {
+    "uglify-js": "git://github.com/mishoo/UglifyJS2#harmony-v2.8.22"
   }
 }
