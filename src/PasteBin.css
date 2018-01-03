@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css?family=Source+Code+Pro:200,300,400,500,600,700,900');
+
+html, body {
+  overflow: hidden;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+
+  /* workaround  */
+  overflow: hidden;
+}
+
+.brand {
+  font-family: 'Source Code Pro', monospace;
+}
+
+.command-bar {
+  height: 5vh;
+  width: 100vw;
+  margin-bottom: 1em;
+}
+
+.monaco-editor {
+  height: 90vh;
+}
+
+.paste-list-item {
+  margin: 1em 0;
+}
