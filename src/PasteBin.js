@@ -123,7 +123,7 @@ class App extends Component {
     logger('## encrypted', encryptedPayload.toString())
 
     const req = new XMLHttpRequest();
-    req.open('POST', `${swarmAddress}/bzzr:`);
+    req.open('POST', `${swarmAddress}/bzzr:/`);
     req.onload = function(event) {
       if (req.status === 200) {
         localStorage.setItem(`blockpaste:${createdAt}`, JSON.stringify({
