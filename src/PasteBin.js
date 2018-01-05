@@ -36,20 +36,6 @@ class App extends Component {
   getOverflowItems() {
       return [
       {
-        key: 'languages',
-        name: 'Syntax',
-        onRender: () => (
-          <div>
-          <Dropdown
-            style={{marginTop: 4, width: '200px', textAlign: 'center'}}
-            options={this.getSelectBoxOptions()}
-            selectedKey={this.state.mode}
-            onChanged={this.handleLanguageChange}
-          />
-        </div>
-        )
-      },
-      {
         key: 'pastes',
         name: 'Pastes',
         icon: 'Paste',
@@ -79,26 +65,18 @@ class App extends Component {
         onClick: this.save,
       },
       {
-        key: 'filename',
-        name: 'Filename',
-        onRender: () => {
-          <TextField
-            placeholder='I am a placeholder.'
-            ariaLabel='Please enter text here'
+        key: 'languages',
+        name: 'Syntax',
+        onRender: () => (
+          <div>
+          <Dropdown
+            style={{marginTop: 4, width: '200px', textAlign: 'center'}}
+            options={this.getSelectBoxOptions()}
+            selectedKey={this.state.mode}
+            onChanged={this.handleLanguageChange}
           />
-        }
-
-      },
-      {
-        key: 'description',
-        name: 'Description',
-        onRender: () => {
-          <TextField
-            placeholder='I am a placeholder.'
-            ariaLabel='Please enter text here'
-          />
-        }
-
+        </div>
+        )
       },
     ]
   }

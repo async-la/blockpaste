@@ -21,7 +21,6 @@ html, body {
 .command-bar {
   height: 5vh;
   width: 100vw;
-  margin-bottom: 1em;
 }
 
 .monaco-editor {
@@ -29,5 +28,21 @@ html, body {
 }
 
 .paste-list-item {
-  margin: 1em 0;
+  margin-bottom: 1em;
+}
+
+.paste-list-description {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: .5em;
+}
+
+.delete-button {
+  background-color: #ce3939;
+  color: white;
+}
+
+.delete-button:hover {
+  background-color: #e04c4c;
+  color: white;
 }

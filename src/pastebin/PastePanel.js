@@ -1,18 +1,30 @@
 import React, { Component } from 'react';
+import { DefaultButton, IButtonProps } from 'office-ui-fabric-react/lib/Button';
 import { Panel, PanelType } from 'office-ui-fabric-react/lib/Panel';
-
+import moment from 'moment'
+import { rootAddress } from '../constants/api'
 
 class PastePanel extends Component {
   getPastes = () => {
     let pastes = [];
     for (let key in localStorage) {
       if (key.indexOf('blockpaste') !== -1) {
-        const link = localStorage.getItem(key)
-        const date = key.split(':')[2]
+        const { link, createdAt } = JSON.parse(localStorage.getItem(key))
         pastes.push(
-          <div key={key}>
-            <a href={link}>{new Date(parseInt(date)).toString()}</a>
-            <button onClick={() => this.deletePaste(key)}>Delete</button>
+          <div className="paste-list-item" key={key}>
+            <div className="paste-list-description">
+              <span><strong>Created {moment(createdAt).fromNow()}</strong></span>
+            </div>
+            <DefaultButton
+              primary
+              text='View'
+              onClick={() => window.location.replace(`${rootAddress}/${link}`)}
+            />
+            <DefaultButton
+              className="delete-button"
+              text='Remove'
+              onClick={() => this.deletePaste(key)}
+            />
           </div>
         )
       }
@@ -29,7 +41,8 @@ class PastePanel extends Component {
     return (
       <Panel
         isOpen={this.props.isOpen}
-        type={ PanelType.smallFixedFar }
+        isLightDismiss
+        type={PanelType.smallFixedFar}
         onDismiss={this.props.onDismiss}
         headerText='Previous Pastes'
         closeButtonAriaLabel='Close'>
