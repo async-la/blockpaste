@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import CryptoJS from 'crypto-js'
 import MonacoEditor from 'react-monaco-editor';
 import PastePanel from './pastebin/PastePanel';
+import SettingsPanel from './pastebin/SettingsPanel';
 import { gethAddress, swarmAddress, rootAddress } from './constants/api'
 
 import { CommandBar } from 'office-ui-fabric-react/lib/CommandBar';
@@ -16,6 +17,9 @@ import './PasteBin.css';
 
 const VERSION = 1
 
+const PERSIST_DATA = 'blockpaste:persistData'
+const USER_OPTIONS = 'blockpaste:userOptions'
+
 class App extends Component {
   state = {
     content: '',
@@ -25,7 +29,26 @@ class App extends Component {
     languages: [],
     mode: 'plaintext',
     pastePanelVisible: false,
+    persistOn: true,
     settingsPanelVisible: false,
+    options: {
+      selectOnLineNumbers: true,
+      fontSize: 14,
+      automaticLayout: true, // less performant
+      lineNumbers: 'on',
+      theme: 'vs',
+    }
+  }
+
+  componentWillMount() {
+    if (localStorage[USER_OPTIONS]) {
+      this.setState({
+        options: JSON.parse(localStorage[USER_OPTIONS])
+      })
+    }
+    this.setState({
+      persistOn: localStorage[PERSIST_DATA] === 'true'
+    })
   }
 
   componentDidMount() {
@@ -45,7 +68,7 @@ class App extends Component {
         key: 'settings',
         name: 'Settings',
         icon: 'Settings',
-        onClick: () => alert('Coming soon'),
+        onClick: this.showSettings,
       },
     ]
   }
@@ -85,6 +108,10 @@ class App extends Component {
     this.setState({ pastePanelVisible: true })
   }
 
+  showSettings = () => {
+    this.setState({ settingsPanelVisible: true })
+  }
+
   save = () => {
     const { content, description, filename, mode } = this.state
     if (content.trim().length === 0) return
@@ -105,12 +132,14 @@ class App extends Component {
 
     const req = new XMLHttpRequest();
     req.open('POST', `${swarmAddress}/bzzr:`);
-    req.onload = function(event) {
+    req.onload = event => {
       if (req.status === 200) {
-        localStorage.setItem(`blockpaste:${createdAt}`, JSON.stringify({
-          link: `${req.responseText}#${key}`,
-          createdAt,
-        }));
+        if (this.state.persistOn) {
+          localStorage.setItem(`blockpaste:paste:${createdAt}`, JSON.stringify({
+            link: `${req.responseText}#${key}`,
+            createdAt,
+          }));
+        }
         window.location.replace(`${rootAddress}/${req.responseText}#${key}`)
       } else {
         alert(`There was an error saving your snippet'.\nPlease check console logs.`)
@@ -164,17 +193,61 @@ class App extends Component {
     })
   }
 
+  onChangeTheme = theme => {
+    this.setState(prevState => ({
+      options: {
+        ...prevState.options,
+        theme,
+      }
+    }), this.updateStoredOptions)
+  }
+
+  onChangeLineNubmersOn = lineNumbers => {
+    this.setState(prevState => ({
+      options: {
+        ...this.state.options,
+        lineNumbers,
+      }
+    }), this.updateStoredOptions)
+    }
+
+  onChangeFontSize = fontSize => {
+    this.setState(prevState => ({
+      options: {
+      ...prevState.options,
+      fontSize,
+      }
+    }), this.updateStoredOptions)
+  }
+
+  updateStoredOptions = () => {
+    localStorage.setItem(USER_OPTIONS, JSON.stringify(this.state.options));
+  }
+
+  onPersistChanged = persistOn => {
+    this.setState({ persistOn })
+    localStorage.setItem(PERSIST_DATA, String(persistOn))
+  }
+
   render() {
-    const options = {
-      selectOnLineNumbers: true,
-      fontSize: 14,
-      automaticLayout: true // less performant
-    };
+
     return (
       <div className="container">
         <PastePanel
           isOpen={this.state.pastePanelVisible}
+          persistOn={this.state.persistOn}
+          onPersistChanged={this.onPersistChanged}
           onDismiss={() => this.setState({ pastePanelVisible: false })}
+        />
+        <SettingsPanel
+          isOpen={this.state.settingsPanelVisible}
+          onDismiss={() => this.setState({ settingsPanelVisible: false })}
+          theme={this.state.options.theme}
+          onChangeTheme={this.onChangeTheme}
+          fontSize={this.state.options.fontSize}
+          onChangeFontSize={this.onChangeFontSize}
+          lineNumbersOn={this.state.options.lineNumbers}
+          onChangeLineNumbersOn={this.onChangeLineNubmersOn}
         />
         <div className="command-bar">
           <CommandBar
@@ -185,13 +258,15 @@ class App extends Component {
         </div>
         <div className="monaco-editor">
           <MonacoEditor
+            key={JSON.stringify(this.state.options)}
             editorDidMount={this.editorDidMount}
             width="100%"
             height="100%"
             language={this.state.editorMounted ? this.state.mode : ''}
             value={this.state.content}
             onChange={content => this.setState({ content })}
-            options={options}
+            options={this.state.options}
+            theme={this.state.options.theme}
           />
         </div>
       </div>
