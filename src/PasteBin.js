@@ -101,7 +101,27 @@ class App extends Component {
         </div>
         )
       },
+      this.state.content && {
+        key: 'copy',
+        name: 'Copy to Clipboard',
+        icon: 'Copy',
+        onClick: this.copyToClipboard
+      },
     ]
+  }
+  copyToClipboard = () => {
+    // Create the textarea input to hold our text.
+    const element = document.createElement('textarea');
+    element.value = this._editor.getValue();
+    // Add it to the document so that it can be focused.
+    document.body.appendChild(element);
+    // Focus on the element so that it can be copied.
+    element.focus();
+    element.setSelectionRange(0, element.value.length);
+    // Execute the copy command.
+    document.execCommand('copy');
+    // Remove the element to keep the document clear.
+    document.body.removeChild(element);
   }
 
   showPastes = () => {
@@ -178,8 +198,11 @@ class App extends Component {
 
   editorDidMount = (editor, monaco) => {
     const languages = _.sortBy(monaco.languages.getLanguages(), 'id')
+
+    this._editor = editor
+    this._editor.focus()
     this.setState({ languages, editorMounted: true })
-    editor.focus()
+
   }
 
   getCurrentLanguage() {
