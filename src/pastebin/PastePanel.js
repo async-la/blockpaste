@@ -41,6 +41,7 @@ class PastePanel extends Component {
   render() {
     return (
       <Panel
+        isBlocking={false}
         isOpen={this.props.isOpen}
         isLightDismiss
         type={PanelType.smallFixedFar}
