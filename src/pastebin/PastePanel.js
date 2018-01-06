@@ -47,7 +47,6 @@ class PastePanel extends Component {
         onDismiss={this.props.onDismiss}
         headerText='Previous Pastes'
         closeButtonAriaLabel='Close'>
-        {this.getPastes()}
         <Toggle
           checked={this.props.persistOn}
           label='Enable paste history'
@@ -55,6 +54,7 @@ class PastePanel extends Component {
           offText='Off'
           onChanged={this.props.onPersistChanged}
         />
+        {this.getPastes()}
       </Panel>
     )
   }
