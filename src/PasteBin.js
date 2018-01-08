@@ -9,6 +9,7 @@ import { CommandBar } from 'office-ui-fabric-react/lib/CommandBar';
 import { Dropdown, IDropdown, DropdownMenuItemType, IDropdownOption } from 'office-ui-fabric-react/lib/Dropdown';
 import { Panel, PanelType } from 'office-ui-fabric-react/lib/Panel';
 import { TextField } from 'office-ui-fabric-react/lib/TextField';
+
 import { getPasteHash, getPasteKey, generatePasteKey } from './utils/pasteHelper'
 import _ from 'lodash'
 
