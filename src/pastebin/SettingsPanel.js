@@ -40,7 +40,7 @@ class SettingsPanel extends Component {
   render() {
     return (
       <Panel
-        isLightDismiss
+        isBlocking={false}
         isOpen={this.props.isOpen}
         type={ PanelType.smallFixedFar }
         onDismiss={this.props.onDismiss}

@@ -2,6 +2,8 @@
 
 html, body {
   overflow: hidden;
+  height: 100%;
+  width: 100%;
 }
 
 .container {
@@ -19,12 +21,11 @@ html, body {
 }
 
 .command-bar {
-  height: 5vh;
   width: 100vw;
 }
 
 .monaco-editor {
-  height: 90vh;
+  height: 100vh;
 }
 
 .paste-list-item {

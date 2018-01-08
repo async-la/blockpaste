@@ -151,7 +151,7 @@ class App extends Component {
     logger('## encrypted', encryptedPayload.toString())
 
     const req = new XMLHttpRequest();
-    req.open('POST', `${swarmAddress}/bzzr:`);
+    req.open('POST', `${swarmAddress}/bzzr:/`);
     req.onload = event => {
       if (req.status === 200) {
         if (this.state.persistOn) {
