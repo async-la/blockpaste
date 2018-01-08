@@ -47,7 +47,7 @@ class App extends Component {
       })
     }
     this.setState({
-      persistOn: localStorage[PERSIST_DATA] === 'true'
+      persistOn: !(localStorage[PERSIST_DATA] === 'false')
     })
   }
 
