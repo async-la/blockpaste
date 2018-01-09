@@ -13,4 +13,4 @@ const logger = (...args) => { if (process.env.NODE_ENV !== 'production') console
 window.logger = logger
 
 // Render main application
-ReactDOM.render(<PasteBin />, document.getElementById('root'))
+ReactDOM.render(<App />, document.getElementById('root'))

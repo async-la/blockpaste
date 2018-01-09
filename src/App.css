@@ -14,6 +14,10 @@ body {
 	margin: 0;
 	padding: 0;
 }
+.App {
+	width: 100%;
+	height: 100vh;
+}
 
 .app-header {
 	display: flex;
@@ -37,13 +41,11 @@ body {
 .app-content {
 	display: flex;
 	justify-content: flex-start;
+	height: 100%;
 }
 
 .app-sidebar {
-	display: flex;
-	flex-direction: column;
-	width: 200px;
-	border: 1px solid #ccc;
+	border-right: 1px solid #ccc;
 	text-align: center;
 	padding: 1em 0;
 	line-height: 2em;
@@ -51,24 +53,26 @@ body {
 
 .app-main {
 	width: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+.react-monaco-editor-container {
+	border-right: 1px solid #ccc;
 }
 
 button {
 	margin: 0 0.5em;
 }
 
-.ReactCodeMirror {
+.MonacoEditor {
 	width: 100%;
-	border: 1px solid #ccc;
-}
-
-.CodeMirror-scroll {
-	height: 100%;
 }
 
 iframe {
 	outline: none;
-	border: 1px solid #ccc;
+	border-width: 0px;
+	border-top: 1px solid #ccc;
 	bottom: 0;
 	position: relative;
 	width: 100%;

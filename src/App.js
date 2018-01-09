@@ -2,14 +2,17 @@ import React, { Component } from 'react';
 
 import BigNumber from 'bignumber.js'
 import CryptoJS from 'crypto-js'
-import Codemirror from 'react-codemirror'
+
+import { CommandBar } from 'office-ui-fabric-react/lib/CommandBar';
+import { Dropdown, IDropdown, DropdownMenuItemType, IDropdownOption } from 'office-ui-fabric-react/lib/Dropdown';
+import { Nav, INavProps } from 'office-ui-fabric-react/lib/Nav';
+
+
+import MonacoEditor from 'react-monaco-editor';
+
 import Web3 from 'web3'
 
 import './App.css';
-import 'codemirror/lib/codemirror.css'
-import 'codemirror/mode/javascript/javascript'
-import 'codemirror/mode/css/css'
-import 'codemirror/mode/htmlmixed/htmlmixed'
 
 import { gethAddress, swarmAddress, rootAddress } from './constants/api'
 
@@ -42,35 +45,25 @@ class App extends Component {
     }
   }
 
+
   compile = () => {
     const iframe = document.getElementById('code')
     const code = iframe.contentWindow.document;
+    console.log('NTML', this.state.html)
 
     code.open();
-    code.writeln(this._htmlTextArea.textareaNode.innerText)
+    code.writeln(this.state.html)
 
     // Set web3 so it can be used with `console.log()` in js snippets
     code.writeln(`<script>window.web3 = window.parent.web3</script>`);
     code.writeln(`<script>window.BigNumber = window.parent.BigNumber</script>`);
-    code.writeln(`<style>${this._cssTextArea.textareaNode.innerText}</style>`)
-    code.writeln(`<script>${this._jsTextArea.textareaNode.innerText}</script>`);
+    code.writeln(`<style>${this.state.css}</style>`)
+    code.writeln(`<script>${this.state.js}</script>`);
     code.close();
   }
 
   updateText(text, type) {
-    switch (type) {
-      case 'html':
-        this.setState({ html: text })
-        break
-      case 'css':
-        this.setState({ css: text })
-        break
-      case 'js':
-        this.setState({ js: text })
-        break
-      default:
-        break
-    }
+    this.setState({ [type]: text })
   }
 
   convert = () => {
@@ -132,7 +125,52 @@ class App extends Component {
     req.send(content);
   }
 
+  htmlEditorDidMount = (editor, monaco) => {
+    console.log('EDITOR',editor)
+    console.log('MONCAO', monaco)
+    console.log(monaco.languages.getLanguages())
+  }
+
+  getItems() {
+      return [
+        {
+          key: 'title',
+          name: 'ETH Sandbox'
+        },
+        {
+          key: 'run',
+          name: 'Run',
+          icon: 'Play'
+        },
+    ]
+  }
+
+  getFarItems() {
+    return [
+      {
+        key: 'save',
+        name: 'Save',
+        icon: 'Save',
+        onClick: this.save,
+      },
+      {
+        key: 'new',
+        name: 'New',
+        icon: 'CircleAddition',
+        onClick: () => window.location.replace(rootAddress),
+      },
+    ]
+  }
+
   render() {
+
+    const options =  {
+          selectOnLineNumbers: true,
+          fontSize: 14,
+          automaticLayout: true, // less performant
+          lineNumbers: 'on',
+          theme: 'vs',
+        }
     return (
       <div className="App">
         <div className="app-header">
@@ -146,21 +184,67 @@ class App extends Component {
           </div>
         </div>
 
+        <div className="command-bar">
+          <CommandBar
+            elipisisAriaLabel='More options'
+            items={this.getItems()}
+            farItems={this.getFarItems()}
+          />
+        </div>
+
         <div className="app-content">
           <div className="app-sidebar">
-            <a href="/b3ecdff9f883d3e98013bebfa364c2a01e62785396464e9e5a8b9cce656dc661">Readme</a>
-            <a href="/0e84c4ed8f22fbb859f4ec4580a1fa731a881940f42e6af1c871a58a746556c3">Examples</a>
+            <Nav
+          groups={
+            [
+              {
+                links:
+                [
+                  { name: 'Playground', url: '/', key: 'key1', onClick: () => this.setState({ selectedKey: 'key1' }) },
+                  { name: 'Readme', url: '/b3ecdff9f883d3e98013bebfa364c2a01e62785396464e9e5a8b9cce656dc661', key: 'key2', onClick: () => this.setState({ selectedKey: 'key2' })},
+                  { name: 'Examples', url: '/0e84c4ed8f22fbb859f4ec4580a1fa731a881940f42e6af1c871a58a746556c3', key: 'key3', onClick: () => this.setState({ selectedKey: 'key3' }) },
+
+                ]
+              }
+            ]
+          }
+          expandedStateText={ 'expanded' }
+          collapsedStateText={ 'collapsed' }
+          selectedKey={ this.state.selectedKey }
+        />
           </div>
 
 
           <div className="app-main">
-            <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Codemirror ref={ref => this._htmlTextArea = ref} value={this.state.html || ''} onChange={(text) => this.updateText(text, 'html')} options={{lineNumbers: true, mode: 'htmlmixed', lineWrapping: true }} />
-              <Codemirror ref={ref => this._cssTextArea = ref} value={this.state.css || ''} onChange={(text) => this.updateText(text, 'css')} options={{lineNumbers: true, mode: 'css', lineWrapping: true }} />
+            <div className="editor-container" style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
+              <MonacoEditor
+                ref={ref => this._htmlTextArea = ref}
+                value={this.state.html || ''}
+                onChange={(text) => this.updateText(text, 'html')}
+                options={options}
+                theme="vs"
+                editorDidMount={this.htmlEditorDidMount}
+                language="html"
+              />
+              <MonacoEditor
+                ref={ref => this._cssTextArea = ref}
+                value={this.state.css || ''}
+                onChange={(text) => this.updateText(text, 'css')}
+                options={options}
+                theme="vs"
+                langauge="css"
+              />
+              <MonacoEditor
+                ref={ref => this._jsTextArea = ref}
+                value={this.state.js || ''}
+                onChange={(text) => this.updateText(text, 'js')}
+                options={options}
+                theme="vs"
+                language="javascript"
+              />
             </div>
 
-            <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Codemirror ref={ref => this._jsTextArea = ref}  value={this.state.js || ''} onChange={(text) => this.updateText(text, 'js')} options={{lineNumbers: true, mode: 'javascript', lineWrapping: true }} />
+            <div style={{ flex: 1 }}>
               <iframe title="Test" id="code" srcDoc="Output"></iframe>
             </div>
           </div>
