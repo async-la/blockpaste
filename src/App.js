@@ -6,6 +6,9 @@ import CryptoJS from 'crypto-js'
 import { CommandBar } from 'office-ui-fabric-react/lib/CommandBar';
 import { Dropdown, IDropdown, DropdownMenuItemType, IDropdownOption } from 'office-ui-fabric-react/lib/Dropdown';
 import { Nav, INavProps } from 'office-ui-fabric-react/lib/Nav';
+import { DefaultButton, IButtonProps } from 'office-ui-fabric-react/lib/Button';
+import { Label } from 'office-ui-fabric-react/lib/Label';
+
 
 
 import MonacoEditor from 'react-monaco-editor';
@@ -31,6 +34,11 @@ class App extends Component {
     html: defaults.html,
     css: defaults.css,
     js: defaults.js,
+    htmlVisible: true,
+    cssVisible: true,
+    jsVisible: true,
+    consoleVisible: true,
+    outputVisible: true,
   }
 
   componentDidMount() {
@@ -125,12 +133,6 @@ class App extends Component {
     req.send(content);
   }
 
-  htmlEditorDidMount = (editor, monaco) => {
-    console.log('EDITOR',editor)
-    console.log('MONCAO', monaco)
-    console.log(monaco.languages.getLanguages())
-  }
-
   getItems() {
       return [
         {
@@ -140,7 +142,8 @@ class App extends Component {
         {
           key: 'run',
           name: 'Run',
-          icon: 'Play'
+          icon: 'Play',
+          onClick: this.compile,
         },
     ]
   }
@@ -162,6 +165,43 @@ class App extends Component {
     ]
   }
 
+  getEditorTabs() {
+    return [
+      {
+        key: 'html',
+        name: 'HTML'
+      },
+      {
+        key: 'css',
+        name: 'CSS'
+      },
+      {
+        key: 'js',
+        name: 'JS'
+      },
+      {
+        key: 'output',
+        name: 'Output'
+      },
+      // {
+      //   key: 'console',
+      //   name: 'Console'
+      // },
+    ]
+  }
+
+  getEditorButtons = () => {
+    return this.getEditorTabs().map(tab => (
+      <DefaultButton
+        key={tab.key}
+        text={tab.name}
+        checked={this.state[`${tab.key}Visible`]}
+        onClick={() => this.setState(state => ({ [`${tab.key}Visible`]: !state[`${tab.key}Visible`]}))}
+      />
+    ))
+  }
+
+
   render() {
 
     const options =  {
@@ -171,18 +211,13 @@ class App extends Component {
           lineNumbers: 'on',
           theme: 'vs',
         }
+
+    const { htmlVisible, cssVisible, jsVisible } = this.state
+    const atLeastOneEditorVisible = htmlVisible || cssVisible || jsVisible
+
+
     return (
       <div className="App">
-        <div className="app-header">
-          <div className="app-header-left">
-            <span>ETH Sandbox</span>
-            <button onClick={this.compile} id="button">Run</button>
-          </div>
-          <div className="app-header-right">
-            <button onClick={this.convert} id="button">Save</button>
-            <button onClick={() => window.location.replace(rootAddress)} id="button">New</button>
-          </div>
-        </div>
 
         <div className="command-bar">
           <CommandBar
@@ -213,39 +248,53 @@ class App extends Component {
           selectedKey={ this.state.selectedKey }
         />
           </div>
-
-
           <div className="app-main">
-            <div className="editor-container" style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', flex: 1 }}>
-              <MonacoEditor
+            <div style={{ marginBottom: 5}}>
+            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', padding: 5, backgroundColor: '#eaeaea'}}>
+              { this.getEditorButtons() }
+            </div>
+          </div>
+            <div
+              key={`key-${this.state.htmlVisible}${this.state.cssVisible}${this.state.jsVisible}`}
+              className="editor-container"
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                flex: atLeastOneEditorVisible ? 1 : 0 }}
+              >
+              {this.state.htmlVisible && <MonacoEditor
                 ref={ref => this._htmlTextArea = ref}
                 value={this.state.html || ''}
                 onChange={(text) => this.updateText(text, 'html')}
                 options={options}
                 theme="vs"
-                editorDidMount={this.htmlEditorDidMount}
                 language="html"
-              />
-              <MonacoEditor
-                ref={ref => this._cssTextArea = ref}
-                value={this.state.css || ''}
-                onChange={(text) => this.updateText(text, 'css')}
-                options={options}
-                theme="vs"
-                langauge="css"
-              />
-              <MonacoEditor
-                ref={ref => this._jsTextArea = ref}
-                value={this.state.js || ''}
-                onChange={(text) => this.updateText(text, 'js')}
-                options={options}
-                theme="vs"
-                language="javascript"
-              />
+              />}
+              {this.state.cssVisible &&
+                <MonacoEditor
+                  ref={ref => this._cssTextArea = ref}
+                  value={this.state.css || ''}
+                  onChange={(text) => this.updateText(text, 'css')}
+                  options={options}
+                  theme="vs"
+                  langauge="css"
+                />}
+              {this.state.jsVisible &&
+                <MonacoEditor
+                  ref={ref => this._jsTextArea = ref}
+                  value={this.state.js || ''}
+                  onChange={(text) => this.updateText(text, 'js')}
+                  options={options}
+                  theme="vs"
+                  language="javascript"
+                />
+              }
+
             </div>
 
-            <div style={{ flex: 1 }}>
-              <iframe title="Test" id="code" srcDoc="Output"></iframe>
+            <div style={{ flex: this.state.outputVisible ? 1 : 0 }}>
+              {this.state.outputVisible && <iframe title="Test" id="code" srcDoc="Output"></iframe>}
             </div>
           </div>
         </div>
