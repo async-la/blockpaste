@@ -9,6 +9,8 @@ import { Nav, INavProps } from 'office-ui-fabric-react/lib/Nav';
 import { DefaultButton, IButtonProps } from 'office-ui-fabric-react/lib/Button';
 import { Label } from 'office-ui-fabric-react/lib/Label';
 
+import PanelGroup from 'react-panelgroup'
+
 
 
 import MonacoEditor from 'react-monaco-editor';
@@ -57,7 +59,6 @@ class App extends Component {
   compile = () => {
     const iframe = document.getElementById('code')
     const code = iframe.contentWindow.document;
-    console.log('NTML', this.state.html)
 
     code.open();
     code.writeln(this.state.html)
@@ -154,7 +155,7 @@ class App extends Component {
         key: 'save',
         name: 'Save',
         icon: 'Save',
-        onClick: this.save,
+        onClick: this.convert,
       },
       {
         key: 'new',
@@ -183,10 +184,10 @@ class App extends Component {
         key: 'output',
         name: 'Output'
       },
-      // {
-      //   key: 'console',
-      //   name: 'Console'
-      // },
+      {
+        key: 'console',
+        name: 'Console'
+      },
     ]
   }
 
@@ -214,7 +215,6 @@ class App extends Component {
 
     const { htmlVisible, cssVisible, jsVisible } = this.state
     const atLeastOneEditorVisible = htmlVisible || cssVisible || jsVisible
-
 
     return (
       <div className="App">
@@ -254,17 +254,15 @@ class App extends Component {
               { this.getEditorButtons() }
             </div>
           </div>
-            <div
-              key={`key-${this.state.htmlVisible}${this.state.cssVisible}${this.state.jsVisible}`}
-              className="editor-container"
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                flex: atLeastOneEditorVisible ? 1 : 0 }}
-              >
+
+                <PanelGroup
+                  key={`key-${this.state.htmlVisible}${this.state.cssVisible}${this.state.jsVisible}${this.state.outputVisible}${this.state.consoleVisible}`}
+
+                  borderColor="#ccc"
+                  spacing={1}
+                >
+
               {this.state.htmlVisible && <MonacoEditor
-                ref={ref => this._htmlTextArea = ref}
                 value={this.state.html || ''}
                 onChange={(text) => this.updateText(text, 'html')}
                 options={options}
@@ -273,7 +271,6 @@ class App extends Component {
               />}
               {this.state.cssVisible &&
                 <MonacoEditor
-                  ref={ref => this._cssTextArea = ref}
                   value={this.state.css || ''}
                   onChange={(text) => this.updateText(text, 'css')}
                   options={options}
@@ -282,7 +279,6 @@ class App extends Component {
                 />}
               {this.state.jsVisible &&
                 <MonacoEditor
-                  ref={ref => this._jsTextArea = ref}
                   value={this.state.js || ''}
                   onChange={(text) => this.updateText(text, 'js')}
                   options={options}
@@ -290,12 +286,25 @@ class App extends Component {
                   language="javascript"
                 />
               }
+              {this.state.outputVisible &&
+                <div
+                  id="iframe-wrapper"
+                  style={{ flex: 1, paddingLeft: 20, paddingRight: 20 }}
+                >
+                  <iframe
+                    onLayout={() => console.log('LAYOUT')}
+                    title="Test"
+                    id="code"
+                    srcDoc="Output"
+                    style={{ width: '100%', height: '100%' }}
+                    >
+                  </iframe>
+              </div>
+            }
 
-            </div>
 
-            <div style={{ flex: this.state.outputVisible ? 1 : 0 }}>
-              {this.state.outputVisible && <iframe title="Test" id="code" srcDoc="Output"></iframe>}
-            </div>
+              </PanelGroup>
+
           </div>
         </div>
       </div>
