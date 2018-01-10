@@ -10,10 +10,8 @@ import { DefaultButton, IButtonProps } from 'office-ui-fabric-react/lib/Button';
 import { Label } from 'office-ui-fabric-react/lib/Label';
 
 import PanelGroup from 'react-panelgroup'
-
-
-
 import MonacoEditor from 'react-monaco-editor';
+import Consoled from 'react-consoled';
 
 import Web3 from 'web3'
 
@@ -41,6 +39,7 @@ class App extends Component {
     jsVisible: true,
     consoleVisible: true,
     outputVisible: true,
+    consoleJs: '',
   }
 
   componentDidMount() {
@@ -57,7 +56,9 @@ class App extends Component {
 
 
   compile = () => {
-    const iframe = document.getElementById('code')
+    this.setState(state => ({ consoleJs: state.js }))
+    const iframe = this._iframe
+    if (!iframe) return
     const code = iframe.contentWindow.document;
 
     code.open();
@@ -292,7 +293,7 @@ class App extends Component {
                   style={{ flex: 1, paddingLeft: 20, paddingRight: 20 }}
                 >
                   <iframe
-                    onLayout={() => console.log('LAYOUT')}
+                    ref={i => this._iframe = i}
                     title="Test"
                     id="code"
                     srcDoc="Output"
@@ -301,8 +302,13 @@ class App extends Component {
                   </iframe>
               </div>
             }
-
-
+              {this.state.consoleVisible &&
+                <div style={{padding: 10}}>
+                <Consoled
+                  consoleLog={(row, i) => <div style={{padding: 10}}><span key={i} className="console-log">{row}</span></div> }
+                >{this.state.consoleJs}</Consoled>
+              </div>
+               }
               </PanelGroup>
 
           </div>

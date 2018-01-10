@@ -61,6 +61,11 @@ button {
 	margin: 0 0.5em;
 }
 
+.consoled {
+	font-family: monospace;
+	color: #555;
+}
+
 .MonacoEditor {
 	width: 100%;
 }
