@@ -20,26 +20,70 @@ import './App.css';
 import { gethAddress, swarmAddress, rootAddress } from './constants/api'
 
 const defaults = {
-  html: '<!-- HTML -->',
-  js: '// JS',
-  css : '/* CSS */',
+  html: {
+    label: 'HTML',
+    value: '<!-- HTML -->',
+    visible: true,
+  },
+  css: {
+    label: 'CSS',
+    value: '/* CSS */',
+    visible: false,
+  },
+  js: {
+    label: 'JS',
+    value: '// JS',
+    visible: true,
+  },
+  console: {
+    label: 'Console',
+    value: '[ console ]',
+    visible: true,
+  },
+  output: {
+    label: 'Output',
+    visible: false,
+  },
 }
+
+const codeEditors = ['html', 'css', 'js']
+const panelOrder = ['html', 'css', 'js', 'console', 'output']
+
+const DIVIDER_WIDTH = 1
 
 const key = 'hR&$yc=oJHXRN?Yo/^fqPtShjnXPF4ehd1?!O}6t#{jnzq7MsWlDX,,bfh_bvX_'
 
 class App extends Component {
   state = {
+    consoleJs: 'console.log("[ console ]")',
+    css: defaults.css.value,
+    html: defaults.html.value,
+    js: defaults.js.value,
     loading: false,
     readOnly: false,
-    html: defaults.html,
-    css: defaults.css,
-    js: defaults.js,
-    htmlVisible: true,
-    cssVisible: true,
-    jsVisible: true,
-    consoleVisible: true,
-    outputVisible: true,
-    consoleJs: '',
+    panels: {
+      html: {
+        size: 100,
+        visible: defaults.html.visible,
+      },
+      css: {
+        size: 100,
+        visible: defaults.css.visible,
+      },
+      js: {
+        size: 100,
+        visible: defaults.js.visible,
+      },
+      console: {
+        size: 100,
+        visible: defaults.console.visible,
+      },
+      output: {
+        size: 100,
+        visible: defaults.output.visible,
+      },
+    },
+    panelWidths: [],
   }
 
   componentDidMount() {
@@ -52,8 +96,8 @@ class App extends Component {
     if (window.location.pathname.split( '/' )[1]) {
       this.getData(window.location.pathname.split( '/' )[1])
     }
+    this.distributePanelsEvenly()
   }
-
 
   compile = () => {
     this.setState(state => ({ consoleJs: state.js }))
@@ -105,9 +149,9 @@ class App extends Component {
         const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
 
         logger('## decrypted', decryptedData)
-        this.updateText(decryptedData.html ||  defaults.html, 'html')
-        this.updateText(decryptedData.css || defaults.css, 'css')
-        this.updateText(decryptedData.js || defaults.js, 'js')
+        this.updateText(decryptedData.html ||  defaults.html.value, 'html')
+        this.updateText(decryptedData.css || defaults.css.value, 'css')
+        this.updateText(decryptedData.js || defaults.js.value, 'js')
 
         this.compile()
       } else {
@@ -135,7 +179,7 @@ class App extends Component {
     req.send(content);
   }
 
-  getItems() {
+  getCommandBarItems() {
       return [
         {
           key: 'title',
@@ -150,7 +194,7 @@ class App extends Component {
     ]
   }
 
-  getFarItems() {
+  getCommandBarFarItems() {
     return [
       {
         key: 'save',
@@ -167,45 +211,153 @@ class App extends Component {
     ]
   }
 
-  getEditorTabs() {
-    return [
-      {
-        key: 'html',
-        name: 'HTML'
-      },
-      {
-        key: 'css',
-        name: 'CSS'
-      },
-      {
-        key: 'js',
-        name: 'JS'
-      },
-      {
-        key: 'output',
-        name: 'Output'
-      },
-      {
-        key: 'console',
-        name: 'Console'
-      },
-    ]
+  generateButtonColor(color) {
+    return {
+      backgroundColor: color,
+      color: 'white',
+    }
+  }
+
+  generateButtonStyle(rootColor, rootCheckedColor, rootHoverColor, rootCheckedHoverColor) {
+    return {
+        root: this.generateButtonColor(rootColor),
+        rootChecked: this.generateButtonColor(rootCheckedColor),
+        rootHovered: this.generateButtonColor(rootHoverColor),
+        rootCheckedHovered: this.generateButtonColor(rootCheckedHoverColor),
+    }
+  }
+
+  getButtonStyle(key) {
+    const styles = {
+      html: this.generateButtonStyle('#ccc', '#ff8c00'),
+      css: this.generateButtonStyle('#ccc', '#0078d7'),
+      js: this.generateButtonStyle('#ccc', '#ffb900'),
+      output: this.generateButtonStyle('#ccc', '#333333'),
+      console: this.generateButtonStyle('#ccc', '#666666'),
+    }
+    return styles[key]
+  }
+
+  distributePanelsEvenly() {
+    const panelContainerWidth = document.getElementById('panel-container').offsetWidth
+    const visiblePanels = panelOrder.filter(panel => this.state.panels[panel].visible)
+    const panelWidth = panelContainerWidth / visiblePanels.length - DIVIDER_WIDTH
+
+    const updatedPanels = visiblePanels.map(p => ({
+      visible: true,
+      size: panelWidth,
+    })).reduce((acc, cur, i) => {
+      acc[visiblePanels[i]] = cur
+      return acc
+    }, {})
+
+    const panelWidths = []
+    visiblePanels.forEach(panel => {
+      panelWidths.push({ size: panelWidth })
+    })
+
+    this.setState(state => ({
+      panelWidths,
+      panels: {
+        ...state.panels,
+        ...updatedPanels,
+      }
+    }))
   }
 
   getEditorButtons = () => {
-    return this.getEditorTabs().map(tab => (
+    return panelOrder.map(panel => (
       <DefaultButton
-        key={tab.key}
-        text={tab.name}
-        checked={this.state[`${tab.key}Visible`]}
-        onClick={() => this.setState(state => ({ [`${tab.key}Visible`]: !state[`${tab.key}Visible`]}))}
+        key={panel}
+        text={defaults[panel].label}
+        checked={this.state.panels[panel].visible}
+        onClick={() => this.togglePanel(panel)}
+        styles={this.getButtonStyle(panel)}
       />
     ))
   }
 
+  togglePanel = panel => {
+    const panels = panelOrder.reduce((acc, cur) => {
+      acc[cur] = {
+        size: this.state.panels[cur].size,
+        visible: panel === cur ? !this.state.panels[cur].visible : this.state.panels[cur].visible
+      }
+      return acc
+    }, {})
+    this.setState({ panels }, this.distributePanelsEvenly)
+  }
+
+  renderEditor(language, options) {
+    return (
+      <MonacoEditor
+        key={`key-${language}-${Math.floor(this.state.panels[language].size / 50)}`} // Rerender if changed by over 50px
+        value={this.state[language] || ''}
+        onChange={(text) => this.updateText(text, language)}
+        options={options}
+        theme="vs"
+        language={language}
+        width={this.state.panels[language].size}
+      />
+    )
+  }
+
+  renderIFrame() {
+    return (
+      <div
+        key={'key-iframe'}
+        id="iframe-wrapper"
+        style={{ flex: 1, paddingLeft: 20, paddingRight: 20 }}
+      >
+        <iframe
+          ref={i => this._iframe = i}
+          title="Test"
+          id="code"
+          srcDoc="Output"
+          style={{ width: '100%', height: '100%' }}
+          >
+        </iframe>
+    </div>
+    )
+  }
+
+  renderConsole() {
+    return (
+      <div style={{ flex: 1 }} key={'key-console'}>
+        <Consoled
+          consoleLog={(row, i) => <div key={i} style={{padding: 10}}><span className="console-log">{row}</span></div> }
+        >
+          {this.state.consoleJs}
+        </Consoled>
+      </div>
+    )
+  }
+
+  renderPanels(options) {
+    // NOTE: Seeing some buggy behavior when using { this.state.languageVisible && <Component /> } syntax
+    // so I'm explicitly creating the component array instead [dan]
+    const panels = []
+    codeEditors.forEach(language => {
+      if (this.state.panels[language].visible) panels.push(this.renderEditor(language, options))
+    })
+    if (this.state.panels['console'].visible) panels.push(this.renderConsole())
+    if (this.state.panels['output'].visible) panels.push(this.renderIFrame())
+    return panels
+  }
+
+  onUpdatePanel = updatedWidths => {
+    const updatedPanels = panelOrder.filter(p => this.state.panels[p].visible).reduce((acc, cur, i) => {
+      acc[cur] = {
+        visible: true,
+        size: updatedWidths[i].size
+      }
+      return acc
+    }, {})
+    this.setState( state => ({ panelWidths: updatedWidths.map(w => ({ size: w.size })), panels: { ...state.panels, ...updatedPanels } }))
+  }
+
 
   render() {
-
     const options =  {
           selectOnLineNumbers: true,
           fontSize: 14,
@@ -214,17 +366,14 @@ class App extends Component {
           theme: 'vs',
         }
 
-    const { htmlVisible, cssVisible, jsVisible } = this.state
-    const atLeastOneEditorVisible = htmlVisible || cssVisible || jsVisible
-
     return (
       <div className="App">
 
         <div className="command-bar">
           <CommandBar
             elipisisAriaLabel='More options'
-            items={this.getItems()}
-            farItems={this.getFarItems()}
+            items={this.getCommandBarItems()}
+            farItems={this.getCommandBarFarItems()}
           />
         </div>
 
@@ -249,68 +398,22 @@ class App extends Component {
           selectedKey={ this.state.selectedKey }
         />
           </div>
-          <div className="app-main">
-            <div style={{ marginBottom: 5}}>
-            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', padding: 5, backgroundColor: '#eaeaea'}}>
-              { this.getEditorButtons() }
+            <div className="app-main">
+              <div style={{ marginBottom: 5}}>
+              <div style={{ display: 'flex', flexDirection: 'row', padding: 5, backgroundColor: '#eaeaea'}}>
+                {this.getEditorButtons()}
+              </div>
             </div>
-          </div>
-
-                <PanelGroup
-                  key={`key-${this.state.htmlVisible}${this.state.cssVisible}${this.state.jsVisible}${this.state.outputVisible}${this.state.consoleVisible}`}
-
-                  borderColor="#ccc"
-                  spacing={1}
-                >
-
-              {this.state.htmlVisible && <MonacoEditor
-                value={this.state.html || ''}
-                onChange={(text) => this.updateText(text, 'html')}
-                options={options}
-                theme="vs"
-                language="html"
-              />}
-              {this.state.cssVisible &&
-                <MonacoEditor
-                  value={this.state.css || ''}
-                  onChange={(text) => this.updateText(text, 'css')}
-                  options={options}
-                  theme="vs"
-                  langauge="css"
-                />}
-              {this.state.jsVisible &&
-                <MonacoEditor
-                  value={this.state.js || ''}
-                  onChange={(text) => this.updateText(text, 'js')}
-                  options={options}
-                  theme="vs"
-                  language="javascript"
-                />
-              }
-              {this.state.outputVisible &&
-                <div
-                  id="iframe-wrapper"
-                  style={{ flex: 1, paddingLeft: 20, paddingRight: 20 }}
-                >
-                  <iframe
-                    ref={i => this._iframe = i}
-                    title="Test"
-                    id="code"
-                    srcDoc="Output"
-                    style={{ width: '100%', height: '100%' }}
-                    >
-                  </iframe>
-              </div>
-            }
-              {this.state.consoleVisible &&
-                <div style={{padding: 10}}>
-                <Consoled
-                  consoleLog={(row, i) => <div style={{padding: 10}}><span key={i} className="console-log">{row}</span></div> }
-                >{this.state.consoleJs}</Consoled>
-              </div>
-               }
+            <div id="panel-container" style={{ flex: 1 }}>
+              <PanelGroup
+                borderColor="#DDD"
+                spacing={1}
+                panelWidths={this.state.panelWidths}
+                onUpdate={this.onUpdatePanel}
+              >
+                {this.renderPanels()}
               </PanelGroup>
-
+            </div>
           </div>
         </div>
       </div>
