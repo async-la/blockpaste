@@ -13,8 +13,9 @@
     "bignumber.js": "^4.0.2",
     "case-sensitive-paths-webpack-plugin": "2.1.1",
     "chalk": "1.1.3",
+    "copy-webpack-plugin": "4.3.1",
     "crypto-js": "^3.1.9-1",
-    "css-loader": "0.28.4",
+    "css-loader": "0.28.7",
     "dotenv": "4.0.0",
     "eslint": "3.19.0",
     "eslint-config-react-app": "^1.0.5",
@@ -26,25 +27,33 @@
     "extract-text-webpack-plugin": "2.1.2",
     "file-loader": "0.11.2",
     "fs-extra": "3.0.1",
+    "highlight.js": "https://github.com/async-la/highlight.js#solidity",
     "html-webpack-plugin": "2.29.0",
     "jest": "20.0.4",
+    "lodash": "^4.17.4",
+    "moment": "^2.20.1",
     "object-assign": "4.1.1",
+    "office-ui-fabric-react": "^5.37.0",
     "postcss-flexbugs-fixes": "3.0.0",
     "postcss-loader": "2.0.6",
     "promise": "7.1.1",
     "react": "^15.6.1",
     "react-codemirror": "git://github.com/skidding/react-codemirror.git#106-fix-update",
+    "react-consoled": "^1.0.1",
     "react-dev-utils": "^3.0.2",
     "react-dom": "^15.6.1",
     "react-error-overlay": "^1.0.9",
+    "react-monaco-editor": "^0.13.0",
+    "react-panelgroup": "^1.0.5",
     "react-router": "^3.0.2",
     "style-loader": "0.18.2",
     "sw-precache-webpack-plugin": "0.11.3",
+    "uglify-js": "git://github.com/mishoo/UglifyJS2#harmony-v2.8.22",
     "url-loader": "0.5.9",
-    "web3": "git://github.com/ethereum/web3.js.git#1.0",
-    "webpack": "2.6.1",
-    "webpack-dev-server": "2.5.0",
-    "webpack-manifest-plugin": "1.1.0",
+    "web3": "1.0.0-beta.27",
+    "webpack": "3.10.0",
+    "webpack-dev-server": "2.9.7",
+    "webpack-manifest-plugin": "1.3.2",
     "whatwg-fetch": "2.0.3"
   },
   "scripts": {
@@ -93,8 +102,5 @@
   },
   "eslintConfig": {
     "extends": "react-app"
-  },
-  "devDependencies": {
-    "uglify-js": "git://github.com/mishoo/UglifyJS2#harmony-v2.8.22"
   }
 }
