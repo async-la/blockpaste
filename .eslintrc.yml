@@ -9,9 +9,9 @@ globals:
   logger: true
 
 extends:
-- standard-react
-- plugin:eslint-plugin-import/warnings
-- plugin:eslint-plugin-import/errors
+# - standard-react
+# - plugin:eslint-plugin-import/warnings
+# - plugin:eslint-plugin-import/errors
 
 plugins:
 - react
@@ -22,7 +22,7 @@ rules:
   keyword-spacing: 2
   no-redeclare: 1
   no-undef: 2
-  no-unused-vars: [2, {vars: all, args: none, ignoreRestSiblings: true}]
+  # no-unused-vars: [2, {vars: all, args: none, ignoreRestSiblings: true}]
   react/jsx-indent: 0
   react/jsx-indent-props: 0
   react/jsx-no-bind: [2, {allowArrowFunctions: true}] # Should reconsider arrow functions
