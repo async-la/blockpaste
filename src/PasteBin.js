@@ -10,7 +10,8 @@ import { Dropdown, IDropdown, DropdownMenuItemType, IDropdownOption } from 'offi
 import { Panel, PanelType } from 'office-ui-fabric-react/lib/Panel';
 import { TextField } from 'office-ui-fabric-react/lib/TextField';
 
-import { getPasteHash, getPasteKey, generatePasteKey } from './utils/pasteHelper'
+import { decryptPayload, encryptPayload, getPasteHash, getPasteKey, generatePasteKey } from './utils/pasteHelper'
+import { BZZRawGetAsync, BZZRawPostAsync } from './utils/swarm'
 import _ from 'lodash'
 
 import './PasteBin.css';
@@ -53,7 +54,7 @@ class App extends Component {
 
   componentDidMount() {
     const pasteHash = getPasteHash()
-    if (getPasteHash()) this.getData(pasteHash)
+    if (pasteHash) this.getData(pasteHash)
   }
 
   getOverflowItems() {
@@ -66,9 +67,12 @@ class App extends Component {
       },
       {
         key: 'settings',
-        name: 'Settings',
         icon: 'Settings',
         onClick: this.showSettings,
+      },
+      {
+        key: 'info',
+        icon: 'info',
       },
     ]
   }
@@ -76,9 +80,9 @@ class App extends Component {
   getItems() {
       return [
       {
-        key: 'new',
-        name: 'New',
-        icon: 'CircleAddition',
+        key: 'title',
+        name: 'BLOCKPASTE',
+        className: 'brand',
         onClick: () => window.location.replace(rootAddress),
       },
       {
@@ -132,7 +136,7 @@ class App extends Component {
     this.setState({ settingsPanelVisible: true })
   }
 
-  save = () => {
+  save = async () => {
     const { content, description, filename, mode } = this.state
     if (content.trim().length === 0) return
     const createdAt = Date.now()
@@ -147,43 +151,34 @@ class App extends Component {
     }
 
     const key = generatePasteKey()
-    const encryptedPayload = CryptoJS.AES.encrypt(JSON.stringify(payload), key);
+    const encryptedPayload = encryptPayload(payload, key);
     logger('## encrypted', encryptedPayload.toString())
 
-    const req = new XMLHttpRequest();
-    req.open('POST', `${swarmAddress}/bzzr:/`);
-    req.onload = event => {
-      if (req.status === 200) {
-        if (this.state.persistOn) {
-          localStorage.setItem(`blockpaste:paste:${createdAt}`, JSON.stringify({
-            link: `${req.responseText}#${key}`,
-            createdAt,
-          }));
-        }
-        window.location.replace(`${rootAddress}/${req.responseText}#${key}`)
-      } else {
-        alert(`There was an error saving your snippet'.\nPlease check console logs.`)
+    try {
+      const hash = await BZZRawPostAsync(encryptedPayload)
+      if (this.state.persistOn) {
+        localStorage.setItem(`blockpaste:paste:${createdAt}`, JSON.stringify({
+          link: `${hash}#${key}`,
+          createdAt,
+        }));
       }
+      window.location.replace(`${rootAddress}/${hash}#${key}`)
+    } catch (err) {
+      alert(`There was an error saving your snippet'.\nPlease check console logs.`)
+      logger('## save error: ', err)
     }
-    req.send(encryptedPayload);
   }
 
-  getData = (hash) => {
-    const req = new XMLHttpRequest();
-    req.open('GET', `${swarmAddress}/bzzr:/${hash}`);
-    req.onload = (event) => {
-      if (req.status === 200) {
-        const bytes = CryptoJS.AES.decrypt(req.responseText, getPasteKey());
-        const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-        logger('## decrypted', decryptedData)
+  getData = async (hash) => {
+    try {
+      const payload = await BZZRawGetAsync(hash)
+      const decryptedData = decryptPayload(payload)
 
-        const { content, description, filename, mode } = decryptedData
-        this.setState({ content, description, filename, mode })
-      } else {
-        alert(`There was an error accessing path 'bzz:/${hash}'.\nPlease check console logs.`)
-      }
+      const { content, description, filename, mode } = decryptedData
+      this.setState({ content, description, filename, mode })
+    } catch (err) {
+      alert(`There was an error accessing path 'bzz:/${hash}'.\nPlease check console logs.`)
     }
-    req.send(null);
   }
 
   handleInputChange = (event) => {
