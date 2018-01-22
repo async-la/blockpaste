@@ -3,8 +3,8 @@ import React, { Component } from "react";
 import BigNumber from "bignumber.js";
 import PanelGroup from "react-panelgroup";
 import MonacoEditor from "react-monaco-editor";
-import Web3 from "web3";
 import SettingsPanel from "./common/SettingsPanel";
+import Web3 from "web3";
 
 import { CommandBar } from "office-ui-fabric-react/lib/CommandBar";
 import { gethAddress, rootAddress } from "./constants/api";
@@ -15,18 +15,6 @@ import {
   generatePasteKey
 } from "./utils/pasteHelper";
 import "./App.css";
-
-//@TODO Creating common Settings Panel from Pastebin
-const defaultOptions = {
-  selectOnLineNumbers: true,
-  fontSize: 14,
-  automaticLayout: true, // less performant
-  lineNumbers: "on",
-  theme: "vs",
-  minimap: {
-    enabled: false
-  }
-};
 
 const defaults = {
   html: {
@@ -60,7 +48,10 @@ class App extends Component {
       fontSize: 14,
       automaticLayout: true, // less performant
       lineNumbers: "on",
-      theme: "vs"
+      theme: "vs",
+      minimap: {
+        enabled: false
+      }
     },
     panels: {
       html: {
