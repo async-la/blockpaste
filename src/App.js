@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import BigNumber from "bignumber.js";
 import PanelGroup from "react-panelgroup";
 import MonacoEditor from "react-monaco-editor";
+import SettingsPanel from "./common/SettingsPanel";
 import Web3 from "web3";
 
 import { CommandBar } from "office-ui-fabric-react/lib/CommandBar";
@@ -14,18 +15,6 @@ import {
   generatePasteKey
 } from "./utils/pasteHelper";
 import "./App.css";
-
-//@TODO Creating common Settings Panel from Pastebin
-const defaultOptions = {
-  selectOnLineNumbers: true,
-  fontSize: 14,
-  automaticLayout: true, // less performant
-  lineNumbers: "on",
-  theme: "vs",
-  minimap: {
-    enabled: false
-  }
-};
 
 const defaults = {
   html: {
@@ -44,6 +33,7 @@ const defaults = {
 
 const codeEditors = ["html", "javascript", "css"];
 const DIVIDER_WIDTH = 1;
+const USER_OPTIONS = "blockpaste:userOptions";
 
 class App extends Component {
   state = {
@@ -52,6 +42,17 @@ class App extends Component {
     javascript: defaults.javascript.value,
     loading: false,
     readOnly: false,
+    settingsPanelVisible: false,
+    options: {
+      selectOnLineNumbers: true,
+      fontSize: 14,
+      automaticLayout: true, // less performant
+      lineNumbers: "on",
+      theme: "vs",
+      minimap: {
+        enabled: false
+      }
+    },
     panels: {
       html: {
         size: 100,
@@ -68,6 +69,14 @@ class App extends Component {
     },
     panelWidths: []
   };
+
+  componentWillMount() {
+    if (localStorage[USER_OPTIONS]) {
+      this.setState({
+        options: JSON.parse(localStorage[USER_OPTIONS])
+      });
+    }
+  }
 
   componentDidMount() {
     let web3 = new Web3(new Web3.providers.HttpProvider(gethAddress));
@@ -185,7 +194,7 @@ class App extends Component {
       {
         key: "settings",
         icon: "settings",
-        onClick: () => console.log("Storage Panel")
+        onClick: this.showSettings
       },
       {
         key: "info",
@@ -267,16 +276,14 @@ class App extends Component {
           />
         </div>
         <MonacoEditor
-          key={`key-${language}-${Math.floor(
-            this.state.panels[language].size / 50
-          )}`} // Rerender if changed by over 50px
+          key={JSON.stringify(this.state.options)}
           value={this.state[language] || ""}
           onChange={text => this.updateText(text, language)}
-          options={defaultOptions}
-          theme="vs"
           height="100%"
           language={language}
           width={this.state.panels[language].size}
+          options={this.state.options}
+          theme={this.state.options.theme}
         />
       </div>
     );
@@ -323,9 +330,63 @@ class App extends Component {
     }));
   };
 
+  showSettings = () => {
+    this.setState({ settingsPanelVisible: true });
+  };
+
+  updateStoredOptions = () => {
+    localStorage.setItem(USER_OPTIONS, JSON.stringify(this.state.options));
+  };
+
+  onChangeTheme = theme => {
+    this.setState(
+      prevState => ({
+        options: {
+          ...prevState.options,
+          theme
+        }
+      }),
+      this.updateStoredOptions
+    );
+  };
+
+  onChangeLineNubmersOn = lineNumbers => {
+    this.setState(
+      prevState => ({
+        options: {
+          ...this.state.options,
+          lineNumbers
+        }
+      }),
+      this.updateStoredOptions
+    );
+  };
+
+  onChangeFontSize = fontSize => {
+    this.setState(
+      prevState => ({
+        options: {
+          ...prevState.options,
+          fontSize
+        }
+      }),
+      this.updateStoredOptions
+    );
+  };
+
   render() {
     return (
       <div className="container">
+        <SettingsPanel
+          isOpen={this.state.settingsPanelVisible}
+          onDismiss={() => this.setState({ settingsPanelVisible: false })}
+          theme={this.state.options.theme}
+          onChangeTheme={this.onChangeTheme}
+          fontSize={this.state.options.fontSize}
+          onChangeFontSize={this.onChangeFontSize}
+          lineNumbersOn={this.state.options.lineNumbers}
+          onChangeLineNumbersOn={this.onChangeLineNubmersOn}
+        />
         <div className="command-bar">
           <CommandBar
             elipisisAriaLabel="More options"
