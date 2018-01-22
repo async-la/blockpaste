@@ -15,4 +15,4 @@ const logger = (...args) => {
 window.logger = logger;
 
 // Render main application
-ReactDOM.render(<App />, document.getElementById("root"));
+ReactDOM.render(<PasteBin />, document.getElementById("root"));

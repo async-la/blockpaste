@@ -111,14 +111,10 @@ class App extends Component {
         key: "copy",
         name: "Copy to Clipboard",
         icon: "Copy",
-        onClick: this.copyToClipboard
+        onClick: () => copyToClipboard(this._editor.getValue())
       }
     ];
   }
-
-  copyToClipboard = () => {
-    copyToClipboard(this._editor.getValue());
-  };
 
   showPastes = () => {
     this.setState({ pastePanelVisible: true });
