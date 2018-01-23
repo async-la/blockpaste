@@ -1,40 +1,40 @@
-import React, { Component } from "react";
-import { DefaultButton } from "office-ui-fabric-react/lib/Button";
-import { Dropdown } from "office-ui-fabric-react/lib/Dropdown";
-import { Label } from "office-ui-fabric-react/lib/Label";
-import { Panel, PanelType } from "office-ui-fabric-react/lib/Panel";
-import { Toggle } from "office-ui-fabric-react/lib/Toggle";
+import React, { Component } from 'react'
+import { DefaultButton } from 'office-ui-fabric-react/lib/Button'
+import { Dropdown } from 'office-ui-fabric-react/lib/Dropdown'
+import { Label } from 'office-ui-fabric-react/lib/Label'
+import { Panel, PanelType } from 'office-ui-fabric-react/lib/Panel'
+import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
 
 const THEMES = [
   {
-    key: "vs",
-    text: "light"
+    key: 'vs',
+    text: 'light',
   },
   {
-    key: "vs-dark",
-    text: "dark"
+    key: 'vs-dark',
+    text: 'dark',
   },
   {
-    key: "hc-black",
-    text: "high contrast"
-  }
-];
+    key: 'hc-black',
+    text: 'high contrast',
+  },
+]
 
-const FONT_SIZES = [];
+const FONT_SIZES = []
 for (let i = 8; i < 60; i += 2) {
-  FONT_SIZES.push({ key: i, text: i + "pt" });
+  FONT_SIZES.push({ key: i, text: i + 'pt' })
 }
 
 class SettingsPanel extends Component {
   handleThemeChange = e => {
-    const { key } = e;
-    this.props.onChangeTheme(key);
-  };
+    const { key } = e
+    this.props.onChangeTheme(key)
+  }
 
   handleFontSizeChange = e => {
-    const { key } = e;
-    this.props.onChangeFontSize(key);
-  };
+    const { key } = e
+    this.props.onChangeFontSize(key)
+  }
 
   render() {
     return (
@@ -48,25 +48,25 @@ class SettingsPanel extends Component {
       >
         <Label>Theme</Label>
         <Dropdown
-          style={{ marginTop: 4, width: "200px", textAlign: "center" }}
+          style={{ marginTop: 4, width: '200px', textAlign: 'center' }}
           options={THEMES}
           selectedKey={this.props.theme}
           onChanged={this.handleThemeChange}
         />
         <Label>Font Size</Label>
         <Dropdown
-          style={{ marginTop: 4, width: "200px", textAlign: "center" }}
+          style={{ marginTop: 4, width: '200px', textAlign: 'center' }}
           options={FONT_SIZES}
           selectedKey={this.props.fontSize}
           onChanged={this.handleFontSizeChange}
         />
         <Toggle
-          checked={!!(this.props.lineNumbersOn === "on")}
+          checked={!!(this.props.lineNumbersOn === 'on')}
           label="Line Numbers"
           onText="On"
           offText="Off"
           onChanged={lineNumbersOn =>
-            this.props.onChangeLineNumbersOn(lineNumbersOn ? "on" : "off")
+            this.props.onChangeLineNumbersOn(lineNumbersOn ? 'on' : 'off')
           }
         />
         <DefaultButton
@@ -77,8 +77,8 @@ class SettingsPanel extends Component {
           onClick={this.props.onDismiss}
         />
       </Panel>
-    );
+    )
   }
 }
 
-export default SettingsPanel;
+export default SettingsPanel

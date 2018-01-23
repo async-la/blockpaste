@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import { DefaultButton } from "office-ui-fabric-react/lib/Button";
-import { Panel, PanelType } from "office-ui-fabric-react/lib/Panel";
+import React, { Component } from 'react'
+import { DefaultButton } from 'office-ui-fabric-react/lib/Button'
+import { Panel, PanelType } from 'office-ui-fabric-react/lib/Panel'
 
 class InfoPanel extends Component {
   render() {
@@ -13,7 +13,7 @@ class InfoPanel extends Component {
         headerText="BLOCKPASTE"
         closeButtonAriaLabel="Close"
       >
-        <div style={{ display: "flex", flexDirection: "column" }}>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
           <span>BLOCKPASTE, your platform for everything Ethereum.</span>
           <div>
             <DefaultButton
@@ -26,8 +26,8 @@ class InfoPanel extends Component {
           </div>
         </div>
       </Panel>
-    );
+    )
   }
 }
 
-export default InfoPanel;
+export default InfoPanel

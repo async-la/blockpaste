@@ -1,16 +1,16 @@
-import React, { Component } from "react";
-import { DefaultButton } from "office-ui-fabric-react/lib/Button";
-import { Panel, PanelType } from "office-ui-fabric-react/lib/Panel";
-import { Toggle } from "office-ui-fabric-react/lib/Toggle";
-import moment from "moment";
-import { rootAddress } from "../constants/api";
+import React, { Component } from 'react'
+import { DefaultButton } from 'office-ui-fabric-react/lib/Button'
+import { Panel, PanelType } from 'office-ui-fabric-react/lib/Panel'
+import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
+import moment from 'moment'
+import { rootAddress } from '../constants/api'
 
 class PastePanel extends Component {
   getPastes = () => {
-    let pastes = [];
+    let pastes = []
     for (let key in localStorage) {
-      if (key.indexOf("blockpaste:paste:") !== -1) {
-        const { link, createdAt } = JSON.parse(localStorage.getItem(key));
+      if (key.indexOf('blockpaste:paste:') !== -1) {
+        const { link, createdAt } = JSON.parse(localStorage.getItem(key))
         pastes.push(
           <div className="paste-list-item" key={key}>
             <div className="paste-list-description">
@@ -29,15 +29,15 @@ class PastePanel extends Component {
               onClick={() => this.deletePaste(key)}
             />
           </div>
-        );
+        )
       }
     }
-    return pastes;
-  };
+    return pastes
+  }
 
   deletePaste(key) {
-    localStorage.removeItem(key);
-    this.forceUpdate();
+    localStorage.removeItem(key)
+    this.forceUpdate()
   }
 
   render() {
@@ -60,8 +60,8 @@ class PastePanel extends Component {
         />
         {this.getPastes()}
       </Panel>
-    );
+    )
   }
 }
 
-export default PastePanel;
+export default PastePanel

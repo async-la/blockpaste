@@ -1,5 +1,5 @@
-import { APP_BLOCKPASTE, APP_PLAYGROUND } from "../constants/app";
+import { APP_BLOCKPASTE, APP_PLAYGROUND } from '../constants/app'
 
 export default {
-  appId: APP_BLOCKPASTE
-};
+  appId: APP_BLOCKPASTE,
+}

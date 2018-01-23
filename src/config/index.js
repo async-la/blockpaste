@@ -1,7 +1,7 @@
-import localConfig from "./config.local";
-import defaultConfig from "./config.default";
+import localConfig from './config.local'
+import defaultConfig from './config.default'
 
 export default {
   ...defaultConfig,
-  ...localConfig
-};
+  ...localConfig,
+}

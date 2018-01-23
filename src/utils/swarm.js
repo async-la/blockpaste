@@ -1,31 +1,31 @@
-import { swarmAddress } from "../constants/api";
+import { swarmAddress } from '../constants/api'
 
 export function BZZRawGetAsync(hash) {
   return new Promise((resolve, reject) => {
-    const req = new XMLHttpRequest();
-    req.open("GET", `${swarmAddress}/bzzr:/${hash}`);
+    const req = new XMLHttpRequest()
+    req.open('GET', `${swarmAddress}/bzzr:/${hash}`)
     req.onload = event => {
       if (req.status === 200) {
-        resolve(req.responseText);
+        resolve(req.responseText)
       } else {
-        reject(req.responseText);
+        reject(req.responseText)
       }
-    };
-    req.send(null);
-  });
+    }
+    req.send(null)
+  })
 }
 
 export function BZZRawPostAsync(payload) {
   return new Promise((resolve, reject) => {
-    const req = new XMLHttpRequest();
-    req.open("POST", `${swarmAddress}/bzzr:/`);
+    const req = new XMLHttpRequest()
+    req.open('POST', `${swarmAddress}/bzzr:/`)
     req.onload = event => {
       if (req.status === 200) {
-        resolve(req.responseText);
+        resolve(req.responseText)
       } else {
-        reject(req.responseText);
+        reject(req.responseText)
       }
-    };
-    req.send(payload);
-  });
+    }
+    req.send(payload)
+  })
 }

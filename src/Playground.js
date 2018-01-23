@@ -1,51 +1,51 @@
-import React, { Component } from "react";
+import React, { Component } from 'react'
 
-import BigNumber from "bignumber.js";
-import InfoPanel from "./common/InfoPanel";
-import PanelGroup from "react-panelgroup";
-import MonacoEditor from "react-monaco-editor";
-import Web3 from "web3";
+import BigNumber from 'bignumber.js'
+import InfoPanel from './common/InfoPanel'
+import PanelGroup from 'react-panelgroup'
+import MonacoEditor from 'react-monaco-editor'
+import Web3 from 'web3'
 
-import { CommandBar } from "office-ui-fabric-react/lib/CommandBar";
-import { gethAddress, rootAddress } from "./constants/api";
-import { BZZRawGetAsync, BZZRawPostAsync } from "./utils/swarm";
-import { copyToClipboard } from "./utils/copyToClipboard";
+import { CommandBar } from 'office-ui-fabric-react/lib/CommandBar'
+import { gethAddress, rootAddress } from './constants/api'
+import { BZZRawGetAsync, BZZRawPostAsync } from './utils/swarm'
+import { copyToClipboard } from './utils/copyToClipboard'
 import {
   decryptPayload,
   encryptPayload,
-  generatePasteKey
-} from "./utils/pasteHelper";
-import "./Playground.css";
+  generatePasteKey,
+} from './utils/pasteHelper'
+import './Playground.css'
 
 //@TODO Creating common Settings Panel from Pastebin
 const defaultOptions = {
   selectOnLineNumbers: true,
   fontSize: 14,
   automaticLayout: true, // less performant
-  lineNumbers: "on",
-  theme: "vs",
+  lineNumbers: 'on',
+  theme: 'vs',
   minimap: {
-    enabled: false
-  }
-};
+    enabled: false,
+  },
+}
 
 const defaults = {
   html: {
-    label: "HTML",
-    visible: true
+    label: 'HTML',
+    visible: true,
   },
   javascript: {
-    label: "Javascript",
-    visible: true
+    label: 'Javascript',
+    visible: true,
   },
   css: {
-    label: "CSS",
-    visible: true
-  }
-};
+    label: 'CSS',
+    visible: true,
+  },
+}
 
-const codeEditors = ["html", "javascript", "css"];
-const DIVIDER_WIDTH = 1;
+const codeEditors = ['html', 'javascript', 'css']
+const DIVIDER_WIDTH = 1
 
 class Playground extends Component {
   state = {
@@ -58,52 +58,52 @@ class Playground extends Component {
     panels: {
       html: {
         size: 100,
-        visible: defaults.html.visible
+        visible: defaults.html.visible,
       },
       css: {
         size: 100,
-        visible: defaults.css.visible
+        visible: defaults.css.visible,
       },
       javascript: {
         size: 100,
-        visible: defaults.javascript.visible
-      }
+        visible: defaults.javascript.visible,
+      },
     },
-    panelWidths: []
-  };
+    panelWidths: [],
+  }
 
   componentDidMount() {
-    let web3 = new Web3(new Web3.providers.HttpProvider(gethAddress));
+    let web3 = new Web3(new Web3.providers.HttpProvider(gethAddress))
 
     // Set web3 as global so it can be access via debugger
-    window.web3 = web3;
-    window.BigNumber = BigNumber;
+    window.web3 = web3
+    window.BigNumber = BigNumber
 
-    if (window.location.pathname.split("/")[1]) {
-      this.getData(window.location.pathname.split("/")[1]);
+    if (window.location.pathname.split('/')[1]) {
+      this.getData(window.location.pathname.split('/')[1])
     }
-    this.distributePanelsEvenly();
+    this.distributePanelsEvenly()
   }
 
   compile = () => {
-    this.setState(state => ({ consoleJs: state.javascript }));
-    const iframe = this._iframe;
-    if (!iframe) return;
-    const code = iframe.contentWindow.document;
+    this.setState(state => ({ consoleJs: state.javascript }))
+    const iframe = this._iframe
+    if (!iframe) return
+    const code = iframe.contentWindow.document
 
-    code.open();
-    code.writeln(this.state.html);
+    code.open()
+    code.writeln(this.state.html)
 
     // Set web3 so it can be used with `console.log()` in javascript snippets
-    code.writeln(`<script>window.web3 = window.parent.web3</script>`);
-    code.writeln(`<script>window.BigNumber = window.parent.BigNumber</script>`);
-    code.writeln(`<style>${this.state.css}</style>`);
-    code.writeln(`<script>${this.state.javascript}</script>`);
-    code.close();
-  };
+    code.writeln(`<script>window.web3 = window.parent.web3</script>`)
+    code.writeln(`<script>window.BigNumber = window.parent.BigNumber</script>`)
+    code.writeln(`<style>${this.state.css}</style>`)
+    code.writeln(`<script>${this.state.javascript}</script>`)
+    code.close()
+  }
 
   updateText(text, type) {
-    this.setState({ [type]: text });
+    this.setState({ [type]: text })
   }
 
   save = async () => {
@@ -112,123 +112,123 @@ class Playground extends Component {
       css: this.state.css,
       javascript: this.state.javascript,
       createdAt: Date.now(),
-      schema: 1
-    };
+      schema: 1,
+    }
 
     // Encrypt JSON Payload
-    const key = generatePasteKey();
-    const encryptedPayload = encryptPayload(payload, key);
-    logger("## encrypted", encryptedPayload.toString());
+    const key = generatePasteKey()
+    const encryptedPayload = encryptPayload(payload, key)
+    logger('## encrypted', encryptedPayload.toString())
 
     try {
-      const hash = await BZZRawPostAsync(encryptedPayload);
-      window.location.replace(`${rootAddress}/${hash}#${key}`);
+      const hash = await BZZRawPostAsync(encryptedPayload)
+      window.location.replace(`${rootAddress}/${hash}#${key}`)
     } catch (err) {
       alert(
         `There was an error saving your snippet'.\nPlease check console logs.`
-      );
-      logger("## save error: ", err);
+      )
+      logger('## save error: ', err)
     }
-  };
+  }
 
   getData = async hash => {
     try {
-      const payload = await BZZRawGetAsync(hash);
-      const decryptedData = decryptPayload(payload);
-      logger("## decrypted", decryptedData);
+      const payload = await BZZRawGetAsync(hash)
+      const decryptedData = decryptPayload(payload)
+      logger('## decrypted', decryptedData)
 
       // @TODO Check for malformed data
-      this.updateText(decryptedData.html || defaults.html.value, "html");
-      this.updateText(decryptedData.css || defaults.css.value, "css");
+      this.updateText(decryptedData.html || defaults.html.value, 'html')
+      this.updateText(decryptedData.css || defaults.css.value, 'css')
       this.updateText(
         decryptedData.javascript || defaults.javascript.value,
-        "javascript"
-      );
+        'javascript'
+      )
 
-      this.compile();
+      this.compile()
     } catch (err) {
       alert(
         `There was an error accessing path 'bzz:/${hash}'.\nPlease check console logs.`
-      );
-      logger("## getData Error: ", err);
+      )
+      logger('## getData Error: ', err)
     }
-  };
+  }
 
   getCommandBarItems() {
     return [
       {
-        key: "title",
-        name: "WEB3 Playground",
-        className: "brand",
-        onClick: () => window.location.replace(rootAddress)
+        key: 'title',
+        name: 'WEB3 Playground',
+        className: 'brand',
+        onClick: () => window.location.replace(rootAddress),
       },
       {
-        key: "run",
-        name: "Run",
-        icon: "Play",
-        onClick: this.compile
+        key: 'run',
+        name: 'Run',
+        icon: 'Play',
+        onClick: this.compile,
       },
       {
-        key: "save",
-        name: "Save",
-        icon: "Save",
-        onClick: this.save
-      }
-    ];
+        key: 'save',
+        name: 'Save',
+        icon: 'Save',
+        onClick: this.save,
+      },
+    ]
   }
 
   getCommandBarFarItems() {
     return [
       {
-        key: "particles",
-        name: "Particles",
-        icon: "backlog",
-        onClick: () => console.log("Storage Panel")
+        key: 'particles',
+        name: 'Particles',
+        icon: 'backlog',
+        onClick: () => console.log('Storage Panel'),
       },
       {
-        key: "settings",
-        icon: "settings",
-        onClick: () => console.log("Storage Panel")
+        key: 'settings',
+        icon: 'settings',
+        onClick: () => console.log('Storage Panel'),
       },
       {
-        key: "info",
-        icon: "info",
-        onClick: () => this.setState({ infoPanelVisible: true })
-      }
-    ];
+        key: 'info',
+        icon: 'info',
+        onClick: () => this.setState({ infoPanelVisible: true }),
+      },
+    ]
   }
 
   distributePanelsEvenly() {
-    const panelContainerWidth = document.getElementById("panel-container")
-      .offsetWidth;
+    const panelContainerWidth = document.getElementById('panel-container')
+      .offsetWidth
     const visiblePanels = codeEditors.filter(
       panel => this.state.panels[panel].visible
-    );
+    )
     const panelWidth =
-      panelContainerWidth / visiblePanels.length - DIVIDER_WIDTH;
+      panelContainerWidth / visiblePanels.length - DIVIDER_WIDTH
 
     const updatedPanels = visiblePanels
       .map(p => ({
         visible: true,
-        size: panelWidth
+        size: panelWidth,
       }))
       .reduce((acc, cur, i) => {
-        acc[visiblePanels[i]] = cur;
-        return acc;
-      }, {});
+        acc[visiblePanels[i]] = cur
+        return acc
+      }, {})
 
-    const panelWidths = [];
+    const panelWidths = []
     visiblePanels.forEach(panel => {
-      panelWidths.push({ size: panelWidth });
-    });
+      panelWidths.push({ size: panelWidth })
+    })
 
     this.setState(state => ({
       panelWidths,
       panels: {
         ...state.panels,
-        ...updatedPanels
-      }
-    }));
+        ...updatedPanels,
+      },
+    }))
   }
 
   togglePanel = panel => {
@@ -238,56 +238,56 @@ class Playground extends Component {
         visible:
           panel === cur
             ? !this.state.panels[cur].visible
-            : this.state.panels[cur].visible
-      };
-      return acc;
-    }, {});
-    this.setState({ panels }, this.distributePanelsEvenly);
-  };
+            : this.state.panels[cur].visible,
+      }
+      return acc
+    }, {})
+    this.setState({ panels }, this.distributePanelsEvenly)
+  }
 
   editorDidMount(editor, monaco, language) {
     switch (language) {
-      case "html":
-        this._HTMLEditor = editor;
-        break;
-      case "javascript":
-        this._JSEditor = editor;
-        break;
-      case "css":
-        this._CSSEditor = editor;
-        break;
+      case 'html':
+        this._HTMLEditor = editor
+        break
+      case 'javascript':
+        this._JSEditor = editor
+        break
+      case 'css':
+        this._CSSEditor = editor
+        break
     }
   }
 
   copyToClipboard(language) {
     switch (language) {
-      case "html":
-        copyToClipboard(this._HTMLEditor.getValue());
-        break;
-      case "javascript":
-        copyToClipboard(this._JSEditor.getValue());
-        break;
-      case "css":
-        copyToClipboard(this._CSSEditor.getValue());
-        break;
+      case 'html':
+        copyToClipboard(this._HTMLEditor.getValue())
+        break
+      case 'javascript':
+        copyToClipboard(this._JSEditor.getValue())
+        break
+      case 'css':
+        copyToClipboard(this._CSSEditor.getValue())
+        break
     }
   }
 
   renderEditor(language) {
     const left = [
       {
-        key: "title",
-        name: language ? language.toUpperCase() : "",
-        className: "no-hover brand"
-      }
-    ];
+        key: 'title',
+        name: language ? language.toUpperCase() : '',
+        className: 'no-hover brand',
+      },
+    ]
     const right = [
       {
-        key: "copy",
-        icon: "Copy",
-        onClick: () => this.copyToClipboard(language)
-      }
-    ];
+        key: 'copy',
+        icon: 'Copy',
+        onClick: () => this.copyToClipboard(language),
+      },
+    ]
     return (
       <div className="monaco-editor">
         <div className="monaco-editor-header">
@@ -304,7 +304,7 @@ class Playground extends Component {
           editorDidMount={(editor, monaco) =>
             this.editorDidMount(editor, monaco, language)
           }
-          value={this.state[language] || ""}
+          value={this.state[language] || ''}
           onChange={text => this.updateText(text, language)}
           options={defaultOptions}
           theme="vs"
@@ -313,7 +313,7 @@ class Playground extends Component {
           width={this.state.panels[language].size}
         />
       </div>
-    );
+    )
   }
 
   renderIFrame() {
@@ -324,21 +324,21 @@ class Playground extends Component {
           title="Test"
           id="code"
           srcDoc="Result"
-          style={{ width: "100%", height: "100%" }}
+          style={{ width: '100%', height: '100%' }}
         />
       </div>
-    );
+    )
   }
 
   renderPanels() {
     // NOTE: Seeing some buggy behavior when using { this.state.languageVisible && <Component /> } syntax
     // so I'm explicitly creating the component array instead [dan]
-    const panels = [];
+    const panels = []
     codeEditors.forEach(language => {
       if (this.state.panels[language].visible)
-        panels.push(this.renderEditor(language));
-    });
-    return panels;
+        panels.push(this.renderEditor(language))
+    })
+    return panels
   }
 
   onUpdatePanel = updatedWidths => {
@@ -347,15 +347,15 @@ class Playground extends Component {
       .reduce((acc, cur, i) => {
         acc[cur] = {
           visible: true,
-          size: updatedWidths[i].size
-        };
-        return acc;
-      }, {});
+          size: updatedWidths[i].size,
+        }
+        return acc
+      }, {})
     this.setState(state => ({
       panelWidths: updatedWidths.map(w => ({ size: w.size })),
-      panels: { ...state.panels, ...updatedPanels }
-    }));
-  };
+      panels: { ...state.panels, ...updatedPanels },
+    }))
+  }
 
   render() {
     return (
@@ -383,8 +383,8 @@ class Playground extends Component {
         </div>
         {this.renderIFrame()}
       </div>
-    );
+    )
   }
 }
 
-export default Playground;
+export default Playground
