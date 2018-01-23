@@ -8,6 +8,7 @@ import Web3 from "web3";
 import { CommandBar } from "office-ui-fabric-react/lib/CommandBar";
 import { gethAddress, rootAddress } from "./constants/api";
 import { BZZRawGetAsync, BZZRawPostAsync } from "./utils/swarm";
+import { copyToClipboard } from "./utils/copyToClipboard";
 import {
   decryptPayload,
   encryptPayload,
@@ -242,6 +243,34 @@ class App extends Component {
     this.setState({ panels }, this.distributePanelsEvenly);
   };
 
+  editorDidMount(editor, monaco, language) {
+    switch (language) {
+      case "html":
+        this._HTMLEditor = editor;
+        break;
+      case "javascript":
+        this._JSEditor = editor;
+        break;
+      case "css":
+        this._CSSEditor = editor;
+        break;
+    }
+  }
+
+  copyToClipboard(language) {
+    switch (language) {
+      case "html":
+        copyToClipboard(this._HTMLEditor.getValue());
+        break;
+      case "javascript":
+        copyToClipboard(this._JSEditor.getValue());
+        break;
+      case "css":
+        copyToClipboard(this._CSSEditor.getValue());
+        break;
+    }
+  }
+
   renderEditor(language) {
     const left = [
       {
@@ -254,7 +283,7 @@ class App extends Component {
       {
         key: "copy",
         icon: "Copy",
-        onClick: this.copyToClipboard
+        onClick: () => this.copyToClipboard(language)
       }
     ];
     return (
@@ -270,6 +299,9 @@ class App extends Component {
           key={`key-${language}-${Math.floor(
             this.state.panels[language].size / 50
           )}`} // Rerender if changed by over 50px
+          editorDidMount={(editor, monaco) =>
+            this.editorDidMount(editor, monaco, language)
+          }
           value={this.state[language] || ""}
           onChange={text => this.updateText(text, language)}
           options={defaultOptions}

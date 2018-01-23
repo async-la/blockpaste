@@ -13,6 +13,7 @@ import {
   generatePasteKey
 } from "./utils/pasteHelper";
 import { BZZRawGetAsync, BZZRawPostAsync } from "./utils/swarm";
+import { copyToClipboard } from "./utils/copyToClipboard";
 import _ from "lodash";
 
 import "./PasteBin.css";
@@ -110,24 +111,10 @@ class App extends Component {
         key: "copy",
         name: "Copy to Clipboard",
         icon: "Copy",
-        onClick: this.copyToClipboard
+        onClick: () => copyToClipboard(this._editor.getValue())
       }
     ];
   }
-  copyToClipboard = () => {
-    // Create the textarea input to hold our text.
-    const element = document.createElement("textarea");
-    element.value = this._editor.getValue();
-    // Add it to the document so that it can be focused.
-    document.body.appendChild(element);
-    // Focus on the element so that it can be copied.
-    element.focus();
-    element.setSelectionRange(0, element.value.length);
-    // Execute the copy command.
-    document.execCommand("copy");
-    // Remove the element to keep the document clear.
-    document.body.removeChild(element);
-  };
 
   showPastes = () => {
     this.setState({ pastePanelVisible: true });
