@@ -12,6 +12,7 @@ import { CommandBar } from 'office-ui-fabric-react/lib/CommandBar'
 import { gethAddress, rootAddress } from './constants/api'
 import { BZZRawGetAsync, BZZRawPostAsync } from './utils/swarm'
 import { copyToClipboard } from './utils/copyToClipboard'
+import { USER_OPTIONS } from './constants/app'
 import {
   decryptPayload,
   encryptPayload,
@@ -47,7 +48,6 @@ const defaults = {
 
 const codeEditors = ['html', 'javascript', 'css']
 const DIVIDER_WIDTH = 1
-const USER_OPTIONS = 'playground:userOptions'
 
 class Playground extends Component {
   state = {

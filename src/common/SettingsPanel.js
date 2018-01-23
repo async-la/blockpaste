@@ -4,6 +4,7 @@ import { Dropdown } from 'office-ui-fabric-react/lib/Dropdown'
 import { Label } from 'office-ui-fabric-react/lib/Label'
 import { Panel, PanelType } from 'office-ui-fabric-react/lib/Panel'
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
+import './SettingsPanel.css'
 
 const THEMES = [
   {
@@ -45,17 +46,10 @@ class SettingsPanel extends Component {
         onDismiss={this.props.onDismiss}
         closeButtonAriaLabel="Close"
       >
-        <div style={{ marginBottom: 25 }}>
+        <div className="settings-spacing">
           <Label style={{ fontSize: 30 }}>Settings</Label>
         </div>
-        <div
-          style={{
-            marginBottom: 25,
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}
-        >
+        <div className="settings-spacing flex-row-space-between">
           <Label>Line Numbers</Label>
           <Toggle
             checked={!!(this.props.lineNumbersOn === 'on')}
@@ -66,19 +60,19 @@ class SettingsPanel extends Component {
             }
           />
         </div>
-        <div style={{ marginBottom: 25 }}>
+        <div className="settings-spacing">
           <Label>Theme</Label>
           <Dropdown
-            style={{ marginTop: 4, width: '200px', textAlign: 'center' }}
+            className="drop-down"
             options={THEMES}
             selectedKey={this.props.theme}
             onChanged={this.handleThemeChange}
           />
         </div>
-        <div style={{ marginBottom: 25 }}>
+        <div className="settings-spacing">
           <Label>Font Size</Label>
           <Dropdown
-            style={{ marginTop: 4, width: '200px', textAlign: 'center' }}
+            className="drop-down"
             options={FONT_SIZES}
             selectedKey={this.props.fontSize}
             onChanged={this.handleFontSizeChange}

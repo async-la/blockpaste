@@ -1,0 +1,15 @@
+.settings-spacing {
+  margin-bottom: 25px;
+}
+
+.flex-row-space-between {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.drop-down {
+  margin-top: 4px;
+  width: 200px;
+  text-align: center;
+}
