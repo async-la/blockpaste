@@ -17,14 +17,15 @@ import { BZZRawGetAsync, BZZRawPostAsync } from "./utils/swarm";
 import { copyToClipboard } from "./utils/copyToClipboard";
 import _ from "lodash";
 
-import "./PasteBin.css";
+import "./BlockPaste.css";
+import "./Playground.css";
 
 const VERSION = 1;
 
 const PERSIST_DATA = "blockpaste:persistData";
 const USER_OPTIONS = "blockpaste:userOptions";
 
-class App extends Component {
+class Blockpaste extends Component {
   state = {
     content: "",
     description: "",
@@ -293,4 +294,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default Blockpaste;

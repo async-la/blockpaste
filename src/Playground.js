@@ -15,7 +15,7 @@ import {
   encryptPayload,
   generatePasteKey
 } from "./utils/pasteHelper";
-import "./App.css";
+import "./Playground.css";
 
 //@TODO Creating common Settings Panel from Pastebin
 const defaultOptions = {
@@ -47,7 +47,7 @@ const defaults = {
 const codeEditors = ["html", "javascript", "css"];
 const DIVIDER_WIDTH = 1;
 
-class App extends Component {
+class Playground extends Component {
   state = {
     css: defaults.css.value,
     html: defaults.html.value,
@@ -387,4 +387,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default Playground;

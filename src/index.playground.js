@@ -1,8 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-
-import App from "./App";
-import PasteBin from "./PasteBin";
+import Playground from "./Playground";
 
 // Register icons and pull the fonts from the default SharePoint cdn.
 import { initializeIcons } from "@uifabric/icons";
@@ -15,4 +13,4 @@ const logger = (...args) => {
 window.logger = logger;
 
 // Render main application
-ReactDOM.render(<PasteBin />, document.getElementById("root"));
+ReactDOM.render(<Playground />, document.getElementById("root"));
