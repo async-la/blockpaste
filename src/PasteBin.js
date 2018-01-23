@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import InfoPanel from "./common/InfoPanel";
 import MonacoEditor from "react-monaco-editor";
 import PastePanel from "./pastebin/PastePanel";
 import SettingsPanel from "./pastebin/SettingsPanel";
@@ -30,6 +31,7 @@ class App extends Component {
     editorMounted: false,
     filename: "",
     languages: [],
+    infoPanelVisible: false,
     mode: "plaintext",
     pastePanelVisible: false,
     persistOn: true,
@@ -65,16 +67,17 @@ class App extends Component {
         key: "pastes",
         name: "Pastes",
         icon: "Paste",
-        onClick: this.showPastes
+        onClick: () => this.setState({ pastePanelVisible: true })
       },
       {
         key: "settings",
         icon: "Settings",
-        onClick: this.showSettings
+        onClick: () => this.setState({ settingsPanelVisible: true })
       },
       {
         key: "info",
-        icon: "info"
+        icon: "info",
+        onClick: () => this.setState({ infoPanelVisible: true })
       }
     ];
   }
@@ -115,14 +118,6 @@ class App extends Component {
       }
     ];
   }
-
-  showPastes = () => {
-    this.setState({ pastePanelVisible: true });
-  };
-
-  showSettings = () => {
-    this.setState({ settingsPanelVisible: true });
-  };
 
   save = async () => {
     const { content, description, filename, mode } = this.state;
@@ -268,6 +263,10 @@ class App extends Component {
           onChangeFontSize={this.onChangeFontSize}
           lineNumbersOn={this.state.options.lineNumbers}
           onChangeLineNumbersOn={this.onChangeLineNubmersOn}
+        />
+        <InfoPanel
+          isOpen={this.state.infoPanelVisible}
+          onDismiss={() => this.setState({ infoPanelVisible: false })}
         />
         <div className="command-bar">
           <CommandBar
