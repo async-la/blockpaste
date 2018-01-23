@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 
 import BigNumber from "bignumber.js";
+import InfoPanel from "./common/InfoPanel";
 import PanelGroup from "react-panelgroup";
 import MonacoEditor from "react-monaco-editor";
 import Web3 from "web3";
@@ -49,6 +50,7 @@ class App extends Component {
   state = {
     css: defaults.css.value,
     html: defaults.html.value,
+    infoPanelVisible: false,
     javascript: defaults.javascript.value,
     loading: false,
     readOnly: false,
@@ -190,7 +192,7 @@ class App extends Component {
       {
         key: "info",
         icon: "info",
-        onClick: () => console.log("Info Panel")
+        onClick: () => this.setState({ infoPanelVisible: true })
       }
     ];
   }
@@ -326,6 +328,10 @@ class App extends Component {
   render() {
     return (
       <div className="container">
+        <InfoPanel
+          isOpen={this.state.infoPanelVisible}
+          onDismiss={() => this.setState({ infoPanelVisible: false })}
+        />
         <div className="command-bar">
           <CommandBar
             elipisisAriaLabel="More options"
