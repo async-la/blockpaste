@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import InfoPanel from './common/InfoPanel'
 import MonacoEditor from 'react-monaco-editor'
 import PastePanel from './pastebin/PastePanel'
-import SettingsPanel from './pastebin/SettingsPanel'
+import SettingsPanel from './common/SettingsPanel'
 import { rootAddress } from './constants/api'
 
 import { CommandBar } from 'office-ui-fabric-react/lib/CommandBar'

@@ -43,34 +43,48 @@ class SettingsPanel extends Component {
         isOpen={this.props.isOpen}
         type={PanelType.smallFixedFar}
         onDismiss={this.props.onDismiss}
-        headerText="Settings"
         closeButtonAriaLabel="Close"
       >
-        <Label>Theme</Label>
-        <Dropdown
-          style={{ marginTop: 4, width: '200px', textAlign: 'center' }}
-          options={THEMES}
-          selectedKey={this.props.theme}
-          onChanged={this.handleThemeChange}
-        />
-        <Label>Font Size</Label>
-        <Dropdown
-          style={{ marginTop: 4, width: '200px', textAlign: 'center' }}
-          options={FONT_SIZES}
-          selectedKey={this.props.fontSize}
-          onChanged={this.handleFontSizeChange}
-        />
-        <Toggle
-          checked={!!(this.props.lineNumbersOn === 'on')}
-          label="Line Numbers"
-          onText="On"
-          offText="Off"
-          onChanged={lineNumbersOn =>
-            this.props.onChangeLineNumbersOn(lineNumbersOn ? 'on' : 'off')
-          }
-        />
+        <div style={{ marginBottom: 25 }}>
+          <Label style={{ fontSize: 30 }}>Settings</Label>
+        </div>
+        <div
+          style={{
+            marginBottom: 25,
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Label>Line Numbers</Label>
+          <Toggle
+            checked={!!(this.props.lineNumbersOn === 'on')}
+            onText="On"
+            offText="Off"
+            onChanged={lineNumbersOn =>
+              this.props.onChangeLineNumbersOn(lineNumbersOn ? 'on' : 'off')
+            }
+          />
+        </div>
+        <div style={{ marginBottom: 25 }}>
+          <Label>Theme</Label>
+          <Dropdown
+            style={{ marginTop: 4, width: '200px', textAlign: 'center' }}
+            options={THEMES}
+            selectedKey={this.props.theme}
+            onChanged={this.handleThemeChange}
+          />
+        </div>
+        <div style={{ marginBottom: 25 }}>
+          <Label>Font Size</Label>
+          <Dropdown
+            style={{ marginTop: 4, width: '200px', textAlign: 'center' }}
+            options={FONT_SIZES}
+            selectedKey={this.props.fontSize}
+            onChanged={this.handleFontSizeChange}
+          />
+        </div>
         <DefaultButton
-          style={{ marginTop: 15 }}
           primary
           data-automation-id="test"
           text="Done"
