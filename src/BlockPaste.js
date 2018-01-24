@@ -16,6 +16,7 @@ import {
 import { BZZRawGetAsync, BZZRawPostAsync } from './utils/swarm'
 import { copyToClipboard } from './utils/copyToClipboard'
 import {
+  APP_BLOCKPASTE,
   USER_OPTIONS_BLOCKPASTE,
   PERSIST_DATA_BLOCKPASTE,
 } from './constants/app'
@@ -37,7 +38,7 @@ class Blockpaste extends Component {
     mode: 'plaintext',
     pastePanelVisible: false,
     persistOn: true,
-    platfrom: 'blockpaste',
+    platform: APP_BLOCKPASTE,
     settingsPanelVisible: false,
     options: {
       selectOnLineNumbers: true,
@@ -259,7 +260,7 @@ class Blockpaste extends Component {
           persistOn={this.state.persistOn}
           onPersistChanged={this.onPersistChanged}
           onDismiss={() => this.setState({ pastePanelVisible: false })}
-          platfrom={this.state.platfrom}
+          platform={this.state.platform}
         />
         <SettingsPanel
           isOpen={this.state.settingsPanelVisible}

@@ -14,6 +14,7 @@ import { gethAddress, rootAddress } from './constants/api'
 import { BZZRawGetAsync, BZZRawPostAsync } from './utils/swarm'
 import { copyToClipboard } from './utils/copyToClipboard'
 import {
+  APP_PLAYGROUND,
   USER_OPTIONS_PLAYGROUND,
   PERSIST_DATA_PLAYGROUND,
 } from './constants/app'
@@ -81,7 +82,7 @@ class Playground extends Component {
     },
     panelWidths: [],
     pastePanelVisible: false,
-    platfrom: 'playground',
+    platform: APP_PLAYGROUND,
     persistOn: true,
   }
 
@@ -461,7 +462,7 @@ class Playground extends Component {
           persistOn={this.state.persistOn}
           onPersistChanged={this.onPersistChanged}
           onDismiss={() => this.setState({ pastePanelVisible: false })}
-          platfrom={this.state.platfrom}
+          platform={this.state.platform}
         />
         <InfoPanel
           isOpen={this.state.infoPanelVisible}

@@ -8,7 +8,7 @@ import { rootAddress } from '../constants/api'
 class PastePanel extends Component {
   getPastes = () => {
     const platfrom =
-      this.props.platfrom === 'blockpaste'
+      this.props.platform === 'blockpaste'
         ? 'blockpaste:paste:'
         : 'playground:paste:'
     let pastes = []
