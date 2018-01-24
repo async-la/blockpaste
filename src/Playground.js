@@ -12,7 +12,7 @@ import { CommandBar } from 'office-ui-fabric-react/lib/CommandBar'
 import { gethAddress, rootAddress } from './constants/api'
 import { BZZRawGetAsync, BZZRawPostAsync } from './utils/swarm'
 import { copyToClipboard } from './utils/copyToClipboard'
-import { USER_OPTIONS } from './constants/app'
+import { USER_OPTIONS_PLAYGROUND } from './constants/app'
 import {
   decryptPayload,
   encryptPayload,
@@ -58,7 +58,8 @@ class Playground extends Component {
     javascript: defaults.javascript.value,
     loading: false,
     readOnly: false,
-    options: JSON.parse(localStorage[USER_OPTIONS]) || defaultOptions,
+    options:
+      JSON.parse(localStorage[USER_OPTIONS_PLAYGROUND]) || defaultOptions,
     panels: {
       html: {
         size: 100,
@@ -363,7 +364,10 @@ class Playground extends Component {
   }
 
   updateStoredOptions = () => {
-    localStorage.setItem(USER_OPTIONS, JSON.stringify(this.state.options))
+    localStorage.setItem(
+      USER_OPTIONS_PLAYGROUND,
+      JSON.stringify(this.state.options)
+    )
   }
 
   onChangeTheme = theme => {

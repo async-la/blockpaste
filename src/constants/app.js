@@ -1,3 +1,6 @@
 export const APP_BLOCKPASTE = 'blockpaste'
 export const APP_PLAYGROUND = 'playground'
-export const USER_OPTIONS = 'playground:userOptions'
+export const USER_OPTIONS_BLOCKPASTE = 'blockpaste:userOptions'
+export const USER_OPTIONS_PLAYGROUND = 'playground:userOptions'
+export const PERSIST_DATA_BLOCKPASTE = 'blockpaste:persistData'
+export const PERSIST_DATA_PLAYGROUND = 'playground:persistData'

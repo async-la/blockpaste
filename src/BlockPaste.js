@@ -15,15 +15,16 @@ import {
 } from './utils/pasteHelper'
 import { BZZRawGetAsync, BZZRawPostAsync } from './utils/swarm'
 import { copyToClipboard } from './utils/copyToClipboard'
+import {
+  USER_OPTIONS_BLOCKPASTE,
+  PERSIST_DATA_BLOCKPASTE,
+} from './constants/app'
 import _ from 'lodash'
 
 import './BlockPaste.css'
 import './Playground.css'
 
 const VERSION = 1
-
-const PERSIST_DATA = 'blockpaste:persistData'
-const USER_OPTIONS = 'blockpaste:userOptions'
 
 class Blockpaste extends Component {
   state = {
@@ -47,13 +48,13 @@ class Blockpaste extends Component {
   }
 
   componentWillMount() {
-    if (localStorage[USER_OPTIONS]) {
+    if (localStorage[USER_OPTIONS_BLOCKPASTE]) {
       this.setState({
-        options: JSON.parse(localStorage[USER_OPTIONS]),
+        options: JSON.parse(localStorage[USER_OPTIONS_BLOCKPASTE]),
       })
     }
     this.setState({
-      persistOn: !(localStorage[PERSIST_DATA] === 'false'),
+      persistOn: !(localStorage[PERSIST_DATA_BLOCKPASTE] === 'false'),
     })
   }
 
@@ -238,12 +239,15 @@ class Blockpaste extends Component {
   }
 
   updateStoredOptions = () => {
-    localStorage.setItem(USER_OPTIONS, JSON.stringify(this.state.options))
+    localStorage.setItem(
+      USER_OPTIONS_BLOCKPASTE,
+      JSON.stringify(this.state.options)
+    )
   }
 
   onPersistChanged = persistOn => {
     this.setState({ persistOn })
-    localStorage.setItem(PERSIST_DATA, String(persistOn))
+    localStorage.setItem(PERSIST_DATA_BLOCKPASTE, String(persistOn))
   }
 
   render() {
