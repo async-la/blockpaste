@@ -6,6 +6,7 @@ import PanelGroup from 'react-panelgroup'
 import MonacoEditor from 'react-monaco-editor'
 import SettingsPanel from './common/SettingsPanel'
 import Web3 from 'web3'
+import _ from 'lodash'
 
 import { CommandBar } from 'office-ui-fabric-react/lib/CommandBar'
 import { gethAddress, rootAddress } from './constants/api'
@@ -18,17 +19,6 @@ import {
   generatePasteKey,
 } from './utils/pasteHelper'
 import './Playground.css'
-
-const defaultOptions = {
-  selectOnLineNumbers: true,
-  fontSize: 14,
-  automaticLayout: true, // less performant
-  lineNumbers: 'on',
-  theme: 'vs',
-  minimap: {
-    enabled: false,
-  },
-}
 
 const defaults = {
   html: {
@@ -60,8 +50,16 @@ class Playground extends Component {
     javascript: defaults.javascript.value,
     loading: false,
     readOnly: false,
-    options:
-      JSON.parse(localStorage[USER_OPTIONS_PLAYGROUND]) || defaultOptions,
+    options: {
+      selectOnLineNumbers: true,
+      fontSize: 14,
+      automaticLayout: true, // less performant
+      lineNumbers: 'on',
+      theme: 'vs',
+      minimap: {
+        enabled: false,
+      },
+    },
     panels: {
       html: {
         size: 100,
@@ -79,7 +77,15 @@ class Playground extends Component {
     panelWidths: [],
   }
 
+  getEditorKey = _.memoize(options => JSON.stringify(options))
+
   componentDidMount() {
+    if (localStorage[USER_OPTIONS_PLAYGROUND]) {
+      this.setState({
+        options: JSON.parse(localStorage[USER_OPTIONS_PLAYGROUND]),
+      })
+    }
+
     let web3 = new Web3(new Web3.providers.HttpProvider(gethAddress))
 
     // Set web3 as global so it can be access via debugger
@@ -312,7 +318,7 @@ class Playground extends Component {
           />
         </div>
         <MonacoEditor
-          key={`key-${language}-${Math.floor(
+          key={`${this.getEditorKey(this.state.options)}-${Math.floor(
             this.state.panels[language].size / 50
             // Rerender if changed by over 50px
           )}`}
