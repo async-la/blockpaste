@@ -33,14 +33,17 @@ const defaults = {
   html: {
     label: 'HTML',
     visible: true,
+    value: '',
   },
   javascript: {
     label: 'Javascript',
     visible: true,
+    value: '',
   },
   css: {
     label: 'CSS',
     visible: true,
+    value: '',
   },
 }
 
@@ -114,6 +117,13 @@ class Playground extends Component {
       createdAt: Date.now(),
       schema: 1,
     }
+
+    if (
+      payload.html.trim().length === 0 &&
+      payload.css.trim().length === 0 &&
+      payload.javascript.trim().length === 0
+    )
+      return
 
     // Encrypt JSON Payload
     const key = generatePasteKey()
