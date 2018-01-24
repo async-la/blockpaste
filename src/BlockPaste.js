@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import InfoPanel from './common/InfoPanel'
 import MonacoEditor from 'react-monaco-editor'
-import PastePanel from './pastebin/PastePanel'
+import PastePanel from './common/PastePanel'
 import SettingsPanel from './common/SettingsPanel'
 import { rootAddress } from './constants/api'
 
@@ -16,6 +16,7 @@ import {
 import { BZZRawGetAsync, BZZRawPostAsync } from './utils/swarm'
 import { copyToClipboard } from './utils/copyToClipboard'
 import {
+  APP_BLOCKPASTE,
   USER_OPTIONS_BLOCKPASTE,
   PERSIST_DATA_BLOCKPASTE,
 } from './constants/app'
@@ -37,6 +38,7 @@ class Blockpaste extends Component {
     mode: 'plaintext',
     pastePanelVisible: false,
     persistOn: true,
+    platform: APP_BLOCKPASTE,
     settingsPanelVisible: false,
     options: {
       selectOnLineNumbers: true,
@@ -258,6 +260,7 @@ class Blockpaste extends Component {
           persistOn={this.state.persistOn}
           onPersistChanged={this.onPersistChanged}
           onDismiss={() => this.setState({ pastePanelVisible: false })}
+          platform={this.state.platform}
         />
         <SettingsPanel
           isOpen={this.state.settingsPanelVisible}

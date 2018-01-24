@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import BigNumber from 'bignumber.js'
 import InfoPanel from './common/InfoPanel'
 import PanelGroup from 'react-panelgroup'
+import PastePanel from './common/PastePanel'
 import MonacoEditor from 'react-monaco-editor'
 import SettingsPanel from './common/SettingsPanel'
 import Web3 from 'web3'
@@ -12,11 +13,16 @@ import { CommandBar } from 'office-ui-fabric-react/lib/CommandBar'
 import { gethAddress, rootAddress } from './constants/api'
 import { BZZRawGetAsync, BZZRawPostAsync } from './utils/swarm'
 import { copyToClipboard } from './utils/copyToClipboard'
-import { USER_OPTIONS_PLAYGROUND } from './constants/app'
+import {
+  APP_PLAYGROUND,
+  USER_OPTIONS_PLAYGROUND,
+  PERSIST_DATA_PLAYGROUND,
+} from './constants/app'
 import {
   decryptPayload,
   encryptPayload,
   generatePasteKey,
+  getPasteHash,
 } from './utils/pasteHelper'
 import './Playground.css'
 
@@ -75,9 +81,18 @@ class Playground extends Component {
       },
     },
     panelWidths: [],
+    pastePanelVisible: false,
+    platform: APP_PLAYGROUND,
+    persistOn: true,
   }
 
   getEditorKey = _.memoize(options => JSON.stringify(options))
+
+  componentWillMount() {
+    this.setState({
+      persistOn: !(localStorage[PERSIST_DATA_PLAYGROUND] === 'false'),
+    })
+  }
 
   componentDidMount() {
     if (localStorage[USER_OPTIONS_PLAYGROUND]) {
@@ -96,6 +111,9 @@ class Playground extends Component {
       this.getData(window.location.pathname.split('/')[1])
     }
     this.distributePanelsEvenly()
+
+    const pasteHash = getPasteHash()
+    if (pasteHash) this.getData(pasteHash)
   }
 
   compile = () => {
@@ -120,11 +138,12 @@ class Playground extends Component {
   }
 
   save = async () => {
+    const createdAt = Date.now()
     const payload = {
       html: this.state.html,
       css: this.state.css,
       javascript: this.state.javascript,
-      createdAt: Date.now(),
+      createdAt,
       schema: 1,
     }
 
@@ -142,6 +161,15 @@ class Playground extends Component {
 
     try {
       const hash = await BZZRawPostAsync(encryptedPayload)
+      if (this.state.persistOn) {
+        localStorage.setItem(
+          `playground:paste:${createdAt}`,
+          JSON.stringify({
+            link: `${hash}#${key}`,
+            createdAt,
+          })
+        )
+      }
       window.location.replace(`${rootAddress}/${hash}#${key}`)
     } catch (err) {
       alert(
@@ -203,7 +231,7 @@ class Playground extends Component {
         key: 'particles',
         name: 'Particles',
         icon: 'backlog',
-        onClick: () => console.log('Storage Panel'),
+        onClick: () => this.setState({ pastePanelVisible: true }),
       },
       {
         key: 'settings',
@@ -421,9 +449,21 @@ class Playground extends Component {
     )
   }
 
+  onPersistChanged = persistOn => {
+    this.setState({ persistOn })
+    localStorage.setItem(PERSIST_DATA_PLAYGROUND, String(persistOn))
+  }
+
   render() {
     return (
       <div className="container">
+        <PastePanel
+          isOpen={this.state.pastePanelVisible}
+          persistOn={this.state.persistOn}
+          onPersistChanged={this.onPersistChanged}
+          onDismiss={() => this.setState({ pastePanelVisible: false })}
+          platform={this.state.platform}
+        />
         <InfoPanel
           isOpen={this.state.infoPanelVisible}
           onDismiss={() => this.setState({ infoPanelVisible: false })}
