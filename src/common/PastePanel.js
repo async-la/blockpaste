@@ -7,9 +7,13 @@ import { rootAddress } from '../constants/api'
 
 class PastePanel extends Component {
   getPastes = () => {
+    const platfrom =
+      this.props.platfrom === 'blockpaste'
+        ? 'blockpaste:paste:'
+        : 'playground:paste:'
     let pastes = []
     for (let key in localStorage) {
-      if (key.indexOf('blockpaste:paste:') !== -1) {
+      if (key.indexOf(platfrom) !== -1) {
         const { link, createdAt } = JSON.parse(localStorage.getItem(key))
         pastes.push(
           <div className="paste-list-item" key={key}>
@@ -32,7 +36,7 @@ class PastePanel extends Component {
         )
       }
     }
-    return pastes
+    return pastes.reverse()
   }
 
   deletePaste(key) {
