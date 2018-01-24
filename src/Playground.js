@@ -4,12 +4,14 @@ import BigNumber from 'bignumber.js'
 import InfoPanel from './common/InfoPanel'
 import PanelGroup from 'react-panelgroup'
 import MonacoEditor from 'react-monaco-editor'
+import SettingsPanel from './common/SettingsPanel'
 import Web3 from 'web3'
 
 import { CommandBar } from 'office-ui-fabric-react/lib/CommandBar'
 import { gethAddress, rootAddress } from './constants/api'
 import { BZZRawGetAsync, BZZRawPostAsync } from './utils/swarm'
 import { copyToClipboard } from './utils/copyToClipboard'
+import { USER_OPTIONS_PLAYGROUND } from './constants/app'
 import {
   decryptPayload,
   encryptPayload,
@@ -17,7 +19,6 @@ import {
 } from './utils/pasteHelper'
 import './Playground.css'
 
-//@TODO Creating common Settings Panel from Pastebin
 const defaultOptions = {
   selectOnLineNumbers: true,
   fontSize: 14,
@@ -52,9 +53,12 @@ class Playground extends Component {
     css: defaults.css.value,
     html: defaults.html.value,
     infoPanelVisible: false,
+    infoSettingsVisible: false,
     javascript: defaults.javascript.value,
     loading: false,
     readOnly: false,
+    options:
+      JSON.parse(localStorage[USER_OPTIONS_PLAYGROUND]) || defaultOptions,
     panels: {
       html: {
         size: 100,
@@ -188,7 +192,7 @@ class Playground extends Component {
       {
         key: 'settings',
         icon: 'settings',
-        onClick: () => console.log('Storage Panel'),
+        onClick: () => this.setState({ infoSettingsVisible: true }),
       },
       {
         key: 'info',
@@ -300,14 +304,15 @@ class Playground extends Component {
         <MonacoEditor
           key={`key-${language}-${Math.floor(
             this.state.panels[language].size / 50
-          )}`} // Rerender if changed by over 50px
+            // Rerender if changed by over 50px
+          )}`}
           editorDidMount={(editor, monaco) =>
             this.editorDidMount(editor, monaco, language)
           }
           value={this.state[language] || ''}
           onChange={text => this.updateText(text, language)}
-          options={defaultOptions}
-          theme="vs"
+          options={this.state.options}
+          theme={this.state.options.theme}
           height="100%"
           language={language}
           width={this.state.panels[language].size}
@@ -357,12 +362,65 @@ class Playground extends Component {
     }))
   }
 
+  updateStoredOptions = () => {
+    localStorage.setItem(
+      USER_OPTIONS_PLAYGROUND,
+      JSON.stringify(this.state.options)
+    )
+  }
+
+  onChangeTheme = theme => {
+    this.setState(
+      prevState => ({
+        options: {
+          ...prevState.options,
+          theme,
+        },
+      }),
+      this.updateStoredOptions
+    )
+  }
+
+  onChangeFontSize = fontSize => {
+    this.setState(
+      prevState => ({
+        options: {
+          ...prevState.options,
+          fontSize,
+        },
+      }),
+      this.updateStoredOptions
+    )
+  }
+
+  onChangeLineNumbersOn = lineNumbers => {
+    this.setState(
+      prevState => ({
+        options: {
+          ...prevState.options,
+          lineNumbers,
+        },
+      }),
+      this.updateStoredOptions
+    )
+  }
+
   render() {
     return (
       <div className="container">
         <InfoPanel
           isOpen={this.state.infoPanelVisible}
           onDismiss={() => this.setState({ infoPanelVisible: false })}
+        />
+        <SettingsPanel
+          isOpen={this.state.infoSettingsVisible}
+          onDismiss={() => this.setState({ infoSettingsVisible: false })}
+          theme={this.state.options.theme}
+          onChangeTheme={this.onChangeTheme}
+          fontSize={this.state.options.fontSize}
+          onChangeFontSize={this.onChangeFontSize}
+          lineNumbersOn={this.state.options.lineNumbers}
+          onChangeLineNumbersOn={this.onChangeLineNumbersOn}
         />
         <div className="command-bar">
           <CommandBar

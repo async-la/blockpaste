@@ -4,6 +4,7 @@ import { Dropdown } from 'office-ui-fabric-react/lib/Dropdown'
 import { Label } from 'office-ui-fabric-react/lib/Label'
 import { Panel, PanelType } from 'office-ui-fabric-react/lib/Panel'
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
+import './SettingsPanel.css'
 
 const THEMES = [
   {
@@ -43,34 +44,41 @@ class SettingsPanel extends Component {
         isOpen={this.props.isOpen}
         type={PanelType.smallFixedFar}
         onDismiss={this.props.onDismiss}
-        headerText="Settings"
         closeButtonAriaLabel="Close"
       >
-        <Label>Theme</Label>
-        <Dropdown
-          style={{ marginTop: 4, width: '200px', textAlign: 'center' }}
-          options={THEMES}
-          selectedKey={this.props.theme}
-          onChanged={this.handleThemeChange}
-        />
-        <Label>Font Size</Label>
-        <Dropdown
-          style={{ marginTop: 4, width: '200px', textAlign: 'center' }}
-          options={FONT_SIZES}
-          selectedKey={this.props.fontSize}
-          onChanged={this.handleFontSizeChange}
-        />
-        <Toggle
-          checked={!!(this.props.lineNumbersOn === 'on')}
-          label="Line Numbers"
-          onText="On"
-          offText="Off"
-          onChanged={lineNumbersOn =>
-            this.props.onChangeLineNumbersOn(lineNumbersOn ? 'on' : 'off')
-          }
-        />
+        <div className="settings-spacing">
+          <Label style={{ fontSize: 30 }}>Settings</Label>
+        </div>
+        <div className="settings-spacing flex-row-space-between">
+          <Label>Line Numbers</Label>
+          <Toggle
+            checked={!!(this.props.lineNumbersOn === 'on')}
+            onText="On"
+            offText="Off"
+            onChanged={lineNumbersOn =>
+              this.props.onChangeLineNumbersOn(lineNumbersOn ? 'on' : 'off')
+            }
+          />
+        </div>
+        <div className="settings-spacing">
+          <Label>Theme</Label>
+          <Dropdown
+            className="drop-down"
+            options={THEMES}
+            selectedKey={this.props.theme}
+            onChanged={this.handleThemeChange}
+          />
+        </div>
+        <div className="settings-spacing">
+          <Label>Font Size</Label>
+          <Dropdown
+            className="drop-down"
+            options={FONT_SIZES}
+            selectedKey={this.props.fontSize}
+            onChanged={this.handleFontSizeChange}
+          />
+        </div>
         <DefaultButton
-          style={{ marginTop: 15 }}
           primary
           data-automation-id="test"
           text="Done"
