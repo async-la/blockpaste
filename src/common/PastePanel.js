@@ -4,13 +4,18 @@ import { Panel, PanelType } from 'office-ui-fabric-react/lib/Panel'
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
 import moment from 'moment'
 import { rootAddress } from '../constants/api'
+import {
+  APP_BLOCKPASTE,
+  PASTE_BLOCKPASTE,
+  PASTE_PLAYGROUND,
+} from '../constants/app'
 
 class PastePanel extends Component {
   getPastes = () => {
     const platfrom =
-      this.props.platform === 'blockpaste'
-        ? 'blockpaste:paste:'
-        : 'playground:paste:'
+      this.props.platform === APP_BLOCKPASTE
+        ? PASTE_BLOCKPASTE
+        : PASTE_PLAYGROUND
     let pastes = []
     for (let key in localStorage) {
       if (key.indexOf(platfrom) !== -1) {
