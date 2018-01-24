@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 
-import _ from 'lodash'
 import BigNumber from 'bignumber.js'
 import InfoPanel from './common/InfoPanel'
 import PanelGroup from 'react-panelgroup'
