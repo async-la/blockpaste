@@ -9,6 +9,7 @@ import {
   PASTE_BLOCKPASTE,
   PASTE_PLAYGROUND,
 } from '../constants/app'
+import './PastePanel.css'
 
 class PastePanel extends Component {
   getPastes = () => {
