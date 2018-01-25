@@ -11,14 +11,14 @@ export default {
   isBlockpaste,
   rootAddress:
     process.env.NODE_ENV === 'production'
-      ? isBlockpaste ? 'https://blockpaste.com' : 'https://web3playground.com'
+      ? isBlockpaste ? 'https://blockpaste.com' : 'https://play.blockpaste.com'
       : 'http://localhost:3000',
   gethAddress:
     process.env.NODE_ENV === 'production'
-      ? 'http://test.bzz.network'
-      : 'http://test.bzz.network',
+      ? 'https://test.bzz.network/geth'
+      : 'https://test.bzz.network/geth',
   swarmAddress:
     process.env.NODE_ENV === 'production'
-      ? 'http://test.bzz.network'
-      : 'http://test.bzz.network',
+      ? 'https://test.bzz.network'
+      : 'https://test.bzz.network',
 }

@@ -3,7 +3,7 @@ import InfoPanel from './common/InfoPanel'
 import MonacoEditor from 'react-monaco-editor'
 import PastePanel from './common/PastePanel'
 import SettingsPanel from './common/SettingsPanel'
-import { rootAddress } from './constants/api'
+import config from './config'
 
 import { CommandBar } from 'office-ui-fabric-react/lib/CommandBar'
 import { Dropdown } from 'office-ui-fabric-react/lib/Dropdown'
@@ -92,7 +92,7 @@ class Blockpaste extends Component {
         key: 'title',
         name: 'BLOCKPASTE',
         className: 'brand',
-        onClick: () => window.location.replace(rootAddress),
+        onClick: () => window.location.replace(config.rootAddress),
       },
       {
         key: 'save',
@@ -152,7 +152,7 @@ class Blockpaste extends Component {
           })
         )
       }
-      window.location.replace(`${rootAddress}/${hash}#${key}`)
+      window.location.replace(`${config.rootAddress}/${hash}#${key}`)
     } catch (err) {
       alert(
         `There was an error saving your snippet'.\nPlease check console logs.`

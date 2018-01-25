@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import { DefaultButton } from 'office-ui-fabric-react/lib/Button'
 import { Panel, PanelType } from 'office-ui-fabric-react/lib/Panel'
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
+import config from '../config'
 import moment from 'moment'
-import { rootAddress } from '../constants/api'
+
 import {
   APP_BLOCKPASTE,
   PASTE_BLOCKPASTE,
@@ -31,7 +32,9 @@ class PastePanel extends Component {
             <DefaultButton
               primary
               text="View"
-              onClick={() => window.location.replace(`${rootAddress}/${link}`)}
+              onClick={() =>
+                window.location.replace(`${config.rootAddress}/${link}`)
+              }
             />
             <DefaultButton
               className="delete-button"

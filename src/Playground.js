@@ -8,9 +8,9 @@ import MonacoEditor from 'react-monaco-editor'
 import SettingsPanel from './common/SettingsPanel'
 import Web3 from 'web3'
 import _ from 'lodash'
+import config from './config'
 
 import { CommandBar } from 'office-ui-fabric-react/lib/CommandBar'
-import { gethAddress, rootAddress } from './constants/api'
 import { BZZRawGetAsync, BZZRawPostAsync } from './utils/swarm'
 import { copyToClipboard } from './utils/copyToClipboard'
 import {
@@ -101,7 +101,7 @@ class Playground extends Component {
       })
     }
 
-    let web3 = new Web3(new Web3.providers.HttpProvider(gethAddress))
+    let web3 = new Web3(new Web3.providers.HttpProvider(config.gethAddress))
 
     // Set web3 as global so it can be access via debugger
     window.web3 = web3
@@ -170,7 +170,7 @@ class Playground extends Component {
           })
         )
       }
-      window.location.replace(`${rootAddress}/${hash}#${key}`)
+      window.location.replace(`${config.rootAddress}/${hash}#${key}`)
     } catch (err) {
       alert(
         `There was an error saving your snippet'.\nPlease check console logs.`
@@ -208,7 +208,7 @@ class Playground extends Component {
         key: 'title',
         name: 'WEB3 Playground',
         className: 'brand',
-        onClick: () => window.location.replace(rootAddress),
+        onClick: () => window.location.replace(config.rootAddress),
       },
       {
         key: 'run',
