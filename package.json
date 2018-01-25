@@ -58,6 +58,9 @@
     "whatwg-fetch": "2.0.3"
   },
   "scripts": {
+    "deploy:blockpaste": "node scripts/deploy-blockpaste",
+    "deploy:playground": "node scripts/deploy-playground",
+    "deploy:all": "yarn deploy:blockpaste && yarn deploy:playground",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
     "start": "node scripts/start.js",
@@ -67,9 +70,7 @@
     "prettier": "prettier --write src",
     "build:blockpaste": "REACT_APP_ID=blockpaste REACT_APP_ROOT=src/index.blockpaste.js REACT_APP_INDEX_FILE=public/index.blockpaste.html node scripts/build.js",
     "build:playground": "REACT_APP_ID=playground REACT_APP_ROOT=src/index.playground.js REACT_APP_INDEX_FILE=public/index.playground.html node scripts/build.js",
-    "test": "node scripts/test.js --env=jsdom",
-    "ssh": "ssh -i ./eth-sandbox.pem ubuntu@ec2-54-202-98-235.us-west-2.compute.amazonaws.com",
-    "deploy": "rsync -rave 'ssh -i eth-sandbox.pem' ./* ubuntu@ec2-54-202-98-235.us-west-2.compute.amazonaws.com:/var/www/eth-sandbox"
+    "test": "node scripts/test.js --env=jsdom"
   },
   "jest": {
     "collectCoverageFrom": [
