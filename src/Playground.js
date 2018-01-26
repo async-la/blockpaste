@@ -4,6 +4,7 @@ import BigNumber from 'bignumber.js'
 import InfoPanel from './common/InfoPanel'
 import PanelGroup from 'react-panelgroup'
 import PastePanel from './common/PastePanel'
+import ReactModal from 'react-modal'
 import MonacoEditor from 'react-monaco-editor'
 import SettingsPanel from './common/SettingsPanel'
 import Web3 from 'web3'
@@ -11,6 +12,12 @@ import _ from 'lodash'
 import config from './config'
 
 import { CommandBar } from 'office-ui-fabric-react/lib/CommandBar'
+import {
+  Dialog,
+  DialogType,
+  DialogFooter,
+} from 'office-ui-fabric-react/lib/Dialog'
+import { PrimaryButton, DefaultButton } from 'office-ui-fabric-react/lib/Button'
 import { BZZRawGetAsync, BZZRawPostAsync } from './utils/swarm'
 import { copyToClipboard } from './utils/copyToClipboard'
 import {
@@ -56,6 +63,7 @@ class Playground extends Component {
     javascript: defaults.javascript.value,
     loading: false,
     readOnly: false,
+    modalVisible: false,
     options: {
       selectOnLineNumbers: true,
       fontSize: 14,
@@ -101,10 +109,11 @@ class Playground extends Component {
       })
     }
 
-    let web3 = new Web3(new Web3.providers.HttpProvider(config.gethAddress))
+    // Is there an injected web3 instance? Ask if we should use it if so
+    if (typeof window.web3 !== 'undefined')
+      this.setState({ modalVisible: true })
+    else this.createWeb3Instance()
 
-    // Set web3 as global so it can be access via debugger
-    window.web3 = web3
     window.BigNumber = BigNumber
 
     if (window.location.pathname.split('/')[1]) {
@@ -115,6 +124,11 @@ class Playground extends Component {
     const pasteHash = getPasteHash()
     if (pasteHash) this.getData(pasteHash)
   }
+
+  createWeb3Instance = () =>
+    (window.web3 = new Web3(
+      new Web3.providers.HttpProvider(config.gethAddress)
+    ))
 
   compile = () => {
     this.setState(state => ({ consoleJs: state.javascript }))
@@ -496,6 +510,41 @@ class Playground extends Component {
           </PanelGroup>
         </div>
         {this.renderIFrame()}
+
+        <Dialog
+          hidden={!this.state.modalVisible}
+          onDismiss={() => {
+            this.createWeb3Instance()
+            this.setState({ modalVisible: false })
+          }}
+          dialogContentProps={{
+            type: DialogType.normal,
+            title: 'Hi there',
+            subText:
+              'Looks like you already have an injected instance of web3. Do you want to use it?',
+          }}
+          modalProps={{
+            isBlocking: false,
+            containerClassName: 'ms-dialogMainOverride',
+          }}
+        >
+          <DialogFooter>
+            <PrimaryButton
+              text="Yes"
+              onClick={() => {
+                // Using current window.web3, noop
+                this.setState({ modalVisible: false })
+              }}
+            />
+            <DefaultButton
+              onClick={() => {
+                this.createWeb3Instance()
+                this.setState({ modalVisible: false })
+              }}
+              text="No"
+            />
+          </DialogFooter>
+        </Dialog>
       </div>
     )
   }
