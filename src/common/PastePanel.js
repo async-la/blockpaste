@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { DefaultButton } from 'office-ui-fabric-react/lib/Button'
+import { Label } from 'office-ui-fabric-react/lib/Label'
 import { Panel, PanelType } from 'office-ui-fabric-react/lib/Panel'
 import { Toggle } from 'office-ui-fabric-react/lib/Toggle'
 import config from '../config'
@@ -61,7 +62,7 @@ class PastePanel extends Component {
         isLightDismiss
         type={PanelType.smallFixedFar}
         onDismiss={this.props.onDismiss}
-        headerText="Previous Pastes"
+        headerText={<Label style={{ fontSize: 30 }}>Saved Pastes</Label>}
         closeButtonAriaLabel="Close"
       >
         <Toggle

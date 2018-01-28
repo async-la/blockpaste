@@ -45,10 +45,8 @@ class SettingsPanel extends Component {
         type={PanelType.smallFixedFar}
         onDismiss={this.props.onDismiss}
         closeButtonAriaLabel="Close"
+        headerText={<Label style={{ fontSize: 30 }}>Settings</Label>}
       >
-        <div className="settings-spacing">
-          <Label style={{ fontSize: 30 }}>Settings</Label>
-        </div>
         <div className="settings-spacing flex-row-space-between">
           <Label>Line Numbers</Label>
           <Toggle

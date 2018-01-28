@@ -104,14 +104,19 @@ class Blockpaste extends Component {
         key: 'languages',
         name: 'Syntax',
         onRender: () => (
-          <div>
-            <Dropdown
-              style={{ marginTop: 4, width: '200px', textAlign: 'center' }}
-              options={this.getSelectBoxOptions()}
-              selectedKey={this.state.mode}
-              onChanged={this.handleLanguageChange}
-            />
-          </div>
+          <Dropdown
+            // @NOTE: Only inline style works here. Unclear as to why. [cdro]
+            style={{
+              marginTop: 4,
+              width: '200px',
+              textAlign: 'center',
+              fontFamily:
+                '"Segoe UI Web (West European)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif',
+            }}
+            options={this.getSelectBoxOptions()}
+            selectedKey={this.state.mode}
+            onChanged={this.handleLanguageChange}
+          />
         ),
       },
       this.state.content && {
