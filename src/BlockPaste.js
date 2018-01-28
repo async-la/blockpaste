@@ -14,7 +14,7 @@ import {
   generatePasteKey,
 } from './utils/pasteHelper'
 import { BZZRawGetAsync, BZZRawPostAsync } from './utils/swarm'
-import { copyToClipboard } from './utils/copyToClipboard'
+// import { copyToClipboard } from './utils/copyToClipboard'
 import {
   APP_BLOCKPASTE,
   USER_OPTIONS_BLOCKPASTE,
@@ -119,12 +119,12 @@ class Blockpaste extends Component {
           />
         ),
       },
-      this.state.content && {
-        key: 'copy',
-        name: 'Copy to Clipboard',
-        icon: 'Copy',
-        onClick: () => copyToClipboard(this._editor.getValue()),
-      },
+      // this.state.content && {
+      //   key: 'copy',
+      //   name: 'Copy to Clipboard',
+      //   icon: 'Copy',
+      //   onClick: () => copyToClipboard(this._editor.getValue()),
+      // },
     ]
   }
 

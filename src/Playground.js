@@ -18,7 +18,7 @@ import {
 } from 'office-ui-fabric-react/lib/Dialog'
 import { PrimaryButton, DefaultButton } from 'office-ui-fabric-react/lib/Button'
 import { BZZRawGetAsync, BZZRawPostAsync } from './utils/swarm'
-import { copyToClipboard } from './utils/copyToClipboard'
+// import { copyToClipboard } from './utils/copyToClipboard'
 import {
   APP_PLAYGROUND,
   USER_OPTIONS_PLAYGROUND,
@@ -320,19 +320,19 @@ class Playground extends Component {
     }
   }
 
-  copyToClipboard(language) {
-    switch (language) {
-      case 'html':
-        copyToClipboard(this._HTMLEditor.getValue())
-        break
-      case 'javascript':
-        copyToClipboard(this._JSEditor.getValue())
-        break
-      case 'css':
-        copyToClipboard(this._CSSEditor.getValue())
-        break
-    }
-  }
+  // copyToClipboard(language) {
+  //   switch (language) {
+  //     case 'html':
+  //       copyToClipboard(this._HTMLEditor.getValue())
+  //       break
+  //     case 'javascript':
+  //       copyToClipboard(this._JSEditor.getValue())
+  //       break
+  //     case 'css':
+  //       copyToClipboard(this._CSSEditor.getValue())
+  //       break
+  //   }
+  // }
 
   renderEditor(language) {
     const left = [
@@ -342,20 +342,20 @@ class Playground extends Component {
         className: 'no-hover brand',
       },
     ]
-    const right = [
-      {
-        key: 'copy',
-        icon: 'Copy',
-        onClick: () => this.copyToClipboard(language),
-      },
-    ]
+    // const right = [
+    //   {
+    //     key: 'copy',
+    //     icon: 'Copy',
+    //     onClick: () => this.copyToClipboard(language),
+    //   },
+    // ]
     return (
       <div className="monaco-editor">
         <div className="monaco-editor-header">
           <CommandBar
             elipisisAriaLabel="More options"
             items={left}
-            farItems={right}
+            // farItems={right}
           />
         </div>
         <MonacoEditor
