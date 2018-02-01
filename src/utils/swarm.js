@@ -11,6 +11,7 @@ export function BZZRawGetAsync(hash) {
         reject(req.responseText)
       }
     }
+    req.withCredentials = true
     req.send(null)
   })
 }
@@ -26,6 +27,7 @@ export function BZZRawPostAsync(payload) {
         reject(req.responseText)
       }
     }
+    req.withCredentials = true
     req.send(payload)
   })
 }
