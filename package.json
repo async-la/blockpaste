@@ -60,7 +60,8 @@
   "scripts": {
     "deploy:blockpaste": "node scripts/deploy-blockpaste",
     "deploy:playground": "node scripts/deploy-playground",
-    "deploy:all": "yarn deploy:blockpaste && yarn deploy:playground",
+    "deploy:all": "yarn deploy:blockpaste && yarn deploy:playground && yarn invalidate-cache",
+    "invalidate-cache": "node scripts/invalidate-cache",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
     "start": "node scripts/start.js",
@@ -118,5 +119,8 @@
       "eslint",
       "git add"
     ]
+  },
+  "devDependencies": {
+    "aws-sdk": "^2.188.0"
   }
 }
