@@ -1,6 +1,6 @@
 import { APP_BLOCKPASTE, APP_PLAYGROUND } from '../constants/app'
 
-const isBlockpaste = process.env.REACT_APP_ENV === APP_BLOCKPASTE
+const isBlockpaste = process.env.REACT_APP_ID === APP_BLOCKPASTE
 
 export default {
   appId: isBlockpaste ? APP_BLOCKPASTE : APP_PLAYGROUND,
