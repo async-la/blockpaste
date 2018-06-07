@@ -3,7 +3,7 @@ import config from '../config'
 export function BZZRawGetAsync(hash) {
   return new Promise((resolve, reject) => {
     const req = new XMLHttpRequest()
-    req.open('GET', `${config.swarmAddress}/bzzr:/${hash}`)
+    req.open('GET', `${config.swarmAddress}/bzz-raw:/${hash}`)
     req.onload = event => {
       if (req.status === 200) {
         resolve(req.responseText)
@@ -19,7 +19,7 @@ export function BZZRawGetAsync(hash) {
 export function BZZRawPostAsync(payload) {
   return new Promise((resolve, reject) => {
     const req = new XMLHttpRequest()
-    req.open('POST', `${config.swarmAddress}/bzzr:/`)
+    req.open('POST', `${config.swarmAddress}/bzz-raw:/`)
     req.onload = event => {
       if (req.status === 200) {
         resolve(req.responseText)
