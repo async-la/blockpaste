@@ -1,33 +1,13 @@
 import config from '../config'
 
+import { SwarmClient } from '@erebos/swarm'
+
+const client = new SwarmClient({ bzz: { url: config.swarmAddress } })
+
 export function BZZRawGetAsync(hash) {
-  return new Promise((resolve, reject) => {
-    const req = new XMLHttpRequest()
-    req.open('GET', `${config.swarmAddress}/bzz-raw:/${hash}`)
-    req.onload = event => {
-      if (req.status === 200) {
-        resolve(req.responseText)
-      } else {
-        reject(req.responseText)
-      }
-    }
-    req.withCredentials = true
-    req.send(null)
-  })
+  return client.bzz.download(hash, { mode: 'raw' })
 }
 
 export function BZZRawPostAsync(payload) {
-  return new Promise((resolve, reject) => {
-    const req = new XMLHttpRequest()
-    req.open('POST', `${config.swarmAddress}/bzz-raw:/`)
-    req.onload = event => {
-      if (req.status === 200) {
-        resolve(req.responseText)
-      } else {
-        reject(req.responseText)
-      }
-    }
-    req.withCredentials = true
-    req.send(payload)
-  })
+  return client.bzz.uploadFile(payload, { mode: 'raw' })
 }

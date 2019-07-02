@@ -14,7 +14,10 @@ class InfoPanel extends Component {
         closeButtonAriaLabel="Close"
       >
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <span>BLOCKPASTE, your platform for everything Ethereum.</span>
+          <span>
+            Swarmbin is a simple and secure way to share code snippets and
+            pastes with others. All pastes are encrypted and upload to Swarm
+          </span>
           <div>
             <DefaultButton
               style={{ marginTop: 15 }}

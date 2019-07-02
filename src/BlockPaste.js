@@ -152,13 +152,18 @@ class Blockpaste extends Component {
         localStorage.setItem(
           `blockpaste:paste:${createdAt}`,
           JSON.stringify({
-            link: `${hash}#${key}`,
+            link: `?hash=${hash}&key=${key}`,
             createdAt,
           })
         )
       }
-      window.location.replace(`${config.rootAddress}/${hash}#${key}`)
+      window.history.replaceState(
+        null,
+        null,
+        `${config.rootAddress}/?hash=${hash}&key=${key}`
+      )
     } catch (err) {
+      console.log(err)
       alert(
         `There was an error saving your snippet'.\nPlease check console logs.`
       )
@@ -169,14 +174,17 @@ class Blockpaste extends Component {
   getData = async hash => {
     try {
       const payload = await BZZRawGetAsync(hash)
-      const decryptedData = decryptPayload(payload)
+      const body = await payload.text()
+      const decryptedData = decryptPayload(body)
 
       const { content, description, filename, mode } = decryptedData
       this.setState({ content, description, filename, mode })
     } catch (err) {
+      console.log(err)
       alert(
         `There was an error accessing path 'bzz:/${hash}'.\nPlease check console logs.`
       )
+      logger('## get data: ', err)
     }
   }
 
