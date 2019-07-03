@@ -1,14 +1,14 @@
-import { APP_BLOCKPASTE, APP_PLAYGROUND } from '../constants/app'
+import { APP_SWARM_BIN, APP_PLAYGROUND } from '../constants/app'
 
-const isBlockpaste = process.env.REACT_APP_ID === APP_BLOCKPASTE
+const isSwarmBin = process.env.REACT_APP_ID === APP_SWARM_BIN
 
 export default {
-  appId: isBlockpaste ? APP_BLOCKPASTE : APP_PLAYGROUND,
-  isBlockpaste,
+  appId: isSwarmBin ? APP_SWARM_BIN : APP_PLAYGROUND,
+  isSwarmBin,
   rootAddress:
     process.env.NODE_ENV === 'production'
-      ? isBlockpaste
-        ? 'https://swarm-gateways.net/bzz:/block-paste.eth'
+      ? isSwarmBin
+        ? 'https://swarm-gateways.net/bzz:/swarmbin.eth'
         : 'https://play.blockpaste.com'
       : 'http://localhost:3000',
   gethAddress:

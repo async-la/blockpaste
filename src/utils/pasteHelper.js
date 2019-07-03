@@ -2,7 +2,7 @@ import CryptoJS from 'crypto-js'
 
 export function getPasteHash(url) {
   if (process.env.NODE_ENV === 'production') {
-    return window.location.pathname.replace('/bzz:/block-paste.eth/', '')
+    return window.location.pathname.replace('/bzz:/swarmbin.eth/', '')
   } else {
     return window.location.pathname.replace(/\/|paste/g, '')
   }

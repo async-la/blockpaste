@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import BlockPaste from './BlockPaste'
+import SwarmBin from './SwarmBin'
 
 // Register icons and pull the fonts from the default SharePoint cdn.
 import { initializeIcons } from '@uifabric/icons'
@@ -13,4 +13,4 @@ const logger = (...args) => {
 window.logger = logger
 
 // Render main application
-ReactDOM.render(<BlockPaste />, document.getElementById('root'))
+ReactDOM.render(<SwarmBin />, document.getElementById('root'))

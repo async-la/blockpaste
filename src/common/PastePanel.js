@@ -7,8 +7,8 @@ import config from '../config'
 import moment from 'moment'
 
 import {
-  APP_BLOCKPASTE,
-  PASTE_BLOCKPASTE,
+  APP_SWARM_BIN,
+  PASTE_SWARM_BIN,
   PASTE_PLAYGROUND,
 } from '../constants/app'
 import './PastePanel.css'
@@ -16,9 +16,7 @@ import './PastePanel.css'
 class PastePanel extends Component {
   getPastes = () => {
     const platfrom =
-      this.props.platform === APP_BLOCKPASTE
-        ? PASTE_BLOCKPASTE
-        : PASTE_PLAYGROUND
+      this.props.platform === APP_SWARM_BIN ? PASTE_SWARM_BIN : PASTE_PLAYGROUND
     let pastes = []
     for (let key in localStorage) {
       if (key.indexOf(platfrom) !== -1) {

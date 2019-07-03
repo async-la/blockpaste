@@ -17,18 +17,19 @@ import {
 import { BZZRawGetAsync, BZZRawPostAsync } from './utils/swarm'
 // import { copyToClipboard } from './utils/copyToClipboard'
 import {
-  APP_BLOCKPASTE,
-  USER_OPTIONS_BLOCKPASTE,
-  PERSIST_DATA_BLOCKPASTE,
+  APP_SWARM_BIN,
+  PASTE_SWARM_BIN,
+  USER_OPTIONS_SWARM_BIN,
+  PERSIST_DATA_SWARM_BIN,
 } from './constants/app'
 import _ from 'lodash'
 
-import './BlockPaste.css'
+import './SwarmBin.css'
 import './Playground.css'
 
 const VERSION = 1
 
-class Blockpaste extends Component {
+class SwarmBin extends Component {
   state = {
     content: '',
     description: '',
@@ -39,7 +40,7 @@ class Blockpaste extends Component {
     mode: 'plaintext',
     pastePanelVisible: false,
     persistOn: true,
-    platform: APP_BLOCKPASTE,
+    platform: APP_SWARM_BIN,
     settingsPanelVisible: false,
     options: {
       selectOnLineNumbers: true,
@@ -51,13 +52,13 @@ class Blockpaste extends Component {
   }
 
   componentWillMount() {
-    if (localStorage[USER_OPTIONS_BLOCKPASTE]) {
+    if (localStorage[USER_OPTIONS_SWARM_BIN]) {
       this.setState({
-        options: JSON.parse(localStorage[USER_OPTIONS_BLOCKPASTE]),
+        options: JSON.parse(localStorage[USER_OPTIONS_SWARM_BIN]),
       })
     }
     this.setState({
-      persistOn: !(localStorage[PERSIST_DATA_BLOCKPASTE] === 'false'),
+      persistOn: !(localStorage[PERSIST_DATA_SWARM_BIN] === 'false'),
     })
   }
 
@@ -151,7 +152,7 @@ class Blockpaste extends Component {
       const hash = await BZZRawPostAsync(encryptedPayload)
       if (this.state.persistOn) {
         localStorage.setItem(
-          `blockpaste:paste:${createdAt}`,
+          `${PASTE_SWARM_BIN}:${createdAt}`,
           JSON.stringify({
             link: `${hash}#${key}`,
             createdAt,
@@ -255,14 +256,14 @@ class Blockpaste extends Component {
 
   updateStoredOptions = () => {
     localStorage.setItem(
-      USER_OPTIONS_BLOCKPASTE,
+      USER_OPTIONS_SWARM_BIN,
       JSON.stringify(this.state.options)
     )
   }
 
   onPersistChanged = persistOn => {
     this.setState({ persistOn })
-    localStorage.setItem(PERSIST_DATA_BLOCKPASTE, String(persistOn))
+    localStorage.setItem(PERSIST_DATA_SWARM_BIN, String(persistOn))
   }
 
   render() {
@@ -314,4 +315,4 @@ class Blockpaste extends Component {
   }
 }
 
-export default Blockpaste
+export default SwarmBin

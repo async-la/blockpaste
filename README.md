@@ -1,5 +1,5 @@
-### Starting blockpaste
-`yarn start:blockpaste`
+### Starting Swarm Bin
+`yarn start:swarmbin`
 
 ### Start playground
 `yarn start:playground`

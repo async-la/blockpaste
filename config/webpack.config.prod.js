@@ -15,7 +15,7 @@ const paths = require('./paths');
 const getClientEnvironment = require('./env');
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
-const publicPath = "https://swarm-gateways.net/bzz:/block-paste.eth/";
+const publicPath = "https://swarm-gateways.net/bzz:/swarmbin.eth/";
 
 // Some apps do not use client-side routing with pushState.
 // For these, "homepage" can be set to "." to enable relative asset paths.

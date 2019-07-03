@@ -1,5 +1,5 @@
 {
-  "name": "eth-sandbox",
+  "name": "swarmbin",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -62,18 +62,18 @@
   },
   "scripts": {
     "analyze": "source-map-explorer './build/static/js/*.js'",
-    "deploy:blockpaste": "node scripts/deploy-blockpaste",
+    "deploy:swarmbin": "node scripts/deploy-swarmbin",
     "deploy:playground": "node scripts/deploy-playground",
-    "deploy:all": "yarn deploy:blockpaste && yarn deploy:playground && yarn invalidate-cache",
+    "deploy:all": "yarn deploy:swarmbin && yarn deploy:playground && yarn invalidate-cache",
     "invalidate-cache": "node scripts/invalidate-cache",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
     "start": "node scripts/start.js",
-    "start:blockpaste": "REACT_APP_ID=blockpaste REACT_APP_ROOT=src/index.blockpaste.js REACT_APP_INDEX_FILE=public/index.blockpaste.html yarn start",
+    "start:swarmbin": "REACT_APP_ID=swarmbin REACT_APP_ROOT=src/index.swarmbin.js REACT_APP_INDEX_FILE=public/index.swarmbin.html yarn start",
     "start:playground": "REACT_APP_ID=playground REACT_APP_ROOT=src/index.playground.js REACT_APP_INDEX_FILE=public/index.playground.html yarn start",
     "precommit": "lint-staged",
     "prettier": "prettier --write src",
-    "build:blockpaste": "REACT_APP_ID=blockpaste REACT_APP_ROOT=src/index.blockpaste.js REACT_APP_INDEX_FILE=public/index.blockpaste.html node scripts/build.js",
+    "build:swarmbin": "REACT_APP_ID=swarmbin REACT_APP_ROOT=src/index.swarmbin.js REACT_APP_INDEX_FILE=public/index.swarmbin.html node scripts/build.js",
     "build:playground": "REACT_APP_ID=playground REACT_APP_ROOT=src/index.playground.js REACT_APP_INDEX_FILE=public/index.playground.html node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom"
   },
