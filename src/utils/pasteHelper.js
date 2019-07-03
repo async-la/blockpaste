@@ -1,28 +1,29 @@
 import CryptoJS from 'crypto-js'
-import qs from 'qs'
 
 export function getPasteHash(url) {
-  const hash = qs.parse(window.location.search, { ignoreQueryPrefix: true })
-    .hash
-  return hash
+  if (process.env.NODE_ENV === 'production') {
+    return window.location.pathname.replace('/bzz:/block-paste.eth/', '')
+  } else {
+    return window.location.pathname.replace(/\/|paste/g, '')
+  }
 }
 
 export function getPasteKey(url) {
-  const key = qs.parse(window.location.search, { ignoreQueryPrefix: true }).key
+  const key = window.location.hash.replace('#', '').replace(/(\?|&).*$/, '')
   return key
 }
 
 export function generatePasteKey() {
-  let text = ''
-  let possible =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-  for (var i = 0; i < 32; i++)
-    text += possible.charAt(Math.floor(Math.random() * possible.length))
-  return text
+  return window.btoa(
+    String.fromCharCode.apply(
+      null,
+      new Uint8Array(CryptoJS.lib.WordArray.random(128).words)
+    )
+  )
 }
 
 export function encryptPayload(payload, key) {
-  return CryptoJS.AES.encrypt(JSON.stringify(payload), key).toString()
+  return CryptoJS.AES.encrypt(JSON.stringify(payload), key)
 }
 
 export function decryptPayload(payload) {

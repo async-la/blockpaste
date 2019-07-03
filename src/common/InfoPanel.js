@@ -10,7 +10,7 @@ class InfoPanel extends Component {
         isOpen={this.props.isOpen}
         type={PanelType.smallFluid}
         onDismiss={this.props.onDismiss}
-        headerText="BLOCKPASTE"
+        headerText="SwarmBin"
         closeButtonAriaLabel="Close"
       >
         <div style={{ display: 'flex', flexDirection: 'column' }}>

@@ -61,6 +61,7 @@
     "whatwg-fetch": "2.0.3"
   },
   "scripts": {
+    "analyze": "source-map-explorer './build/static/js/*.js'",
     "deploy:blockpaste": "node scripts/deploy-blockpaste",
     "deploy:playground": "node scripts/deploy-playground",
     "deploy:all": "yarn deploy:blockpaste && yarn deploy:playground && yarn invalidate-cache",

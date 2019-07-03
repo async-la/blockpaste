@@ -12,6 +12,7 @@ import {
   encryptPayload,
   getPasteHash,
   generatePasteKey,
+  getPasteKey,
 } from './utils/pasteHelper'
 import { BZZRawGetAsync, BZZRawPostAsync } from './utils/swarm'
 // import { copyToClipboard } from './utils/copyToClipboard'
@@ -90,7 +91,7 @@ class Blockpaste extends Component {
     return [
       {
         key: 'title',
-        name: 'BLOCKPASTE',
+        name: 'SwarmBin',
         className: 'brand',
         onClick: () => window.location.replace(config.rootAddress),
       },
@@ -152,7 +153,7 @@ class Blockpaste extends Component {
         localStorage.setItem(
           `blockpaste:paste:${createdAt}`,
           JSON.stringify({
-            link: `?hash=${hash}&key=${key}`,
+            link: `${hash}#${key}`,
             createdAt,
           })
         )
@@ -160,10 +161,9 @@ class Blockpaste extends Component {
       window.history.replaceState(
         null,
         null,
-        `${config.rootAddress}/?hash=${hash}&key=${key}`
+        `${config.rootAddress}/${hash}#${key}`
       )
     } catch (err) {
-      console.log(err)
       alert(
         `There was an error saving your snippet'.\nPlease check console logs.`
       )
